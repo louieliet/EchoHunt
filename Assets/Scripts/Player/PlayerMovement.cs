@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     {
         controls = new PlayerControls();
         controls.Player.Move.performed += ctx => OnMovement(ctx.ReadValue<Vector2>());
+        controls.Player.Move.canceled += ctx => OnMovement(Vector2.zero); // Reinicia el movimiento cuando no hay entrada
     }
 
     void OnEnable()
@@ -36,13 +37,13 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMovement(Vector2 input)
     {
-        movementInput = input;
+        movementInput = input; // Actualiza el valor de movementInput
     }
 
     void Update()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundMask);
-        rb.linearDamping = isGrounded ? groundDrag : 0;
+        rb.linearDamping = isGrounded ? groundDrag : 0; // Usa rb.drag en lugar de rb.linearDamping
     }
 
     void FixedUpdate()
