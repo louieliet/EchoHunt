@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyBehavior : MonoBehaviour
@@ -11,13 +12,16 @@ public class EnemyBehavior : MonoBehaviour
 
     private NavMeshAgent agent;
     private float m_Distance;
-    private Vector3 startingPoint;
     private bool canSeePlayer = false;
+
+    [Header("Events")]
+    public UnityEvent OnPlayerSpotted;
+    public UnityEvent OnPlayerLost;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        startingPoint = transform.position; // Guarda la posición inicial del enemigo
+        target = GameObject.FindWithTag("Player").transform; // Busca al jugador por su tag
     }
 
     void Update()
@@ -34,15 +38,14 @@ public class EnemyBehavior : MonoBehaviour
         }
         else if (canSeePlayer)
         {
-            // Si el jugador está dentro del rango de visión, persíguelo
+            OnPlayerSpotted.Invoke();
             agent.isStopped = false;
             agent.destination = target.position;
         }
         else
         {
-            // Si no ve al jugador, regresa al punto inicial
+            OnPlayerLost.Invoke();
             agent.isStopped = false;
-            agent.destination = startingPoint;
         }
     }
 
