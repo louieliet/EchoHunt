@@ -10,6 +10,8 @@ public class EnemyBehavior : MonoBehaviour
     public float visionRange = 10f; // Rango de visión del enemigo
     public float visionAngle = 90f; // Ángulo de visión del enemigo
 
+    public Transform EyesReference; // Punto desde donde ve el zombie
+
     private NavMeshAgent agent;
     private float m_Distance;
     private bool canSeePlayer = false;
@@ -58,7 +60,8 @@ public class EnemyBehavior : MonoBehaviour
         }
 
         // Verifica si el jugador está dentro del ángulo de visión
-        Vector3 directionToTarget = (target.position - transform.position).normalized;
+        Vector3 directionToTarget = (target.position - EyesReference.position).normalized;
+        float distanceToTarget = (target.position - EyesReference.position).magnitude;
         float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
 
         if (angleToTarget > visionAngle / 2)
@@ -68,7 +71,7 @@ public class EnemyBehavior : MonoBehaviour
 
         // Verifica si hay obstáculos entre el enemigo y el jugador
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToTarget, out hit, visionRange))
+        if (Physics.Raycast(EyesReference.position, directionToTarget, out hit, visionRange))
         {
             if (hit.transform == target)
             {
