@@ -20,14 +20,29 @@ public class EnemyBehavior : MonoBehaviour
     public UnityEvent OnPlayerSpotted;
     public UnityEvent OnPlayerLost;
 
+    private bool isZombieAwake;
+
     void Start()
     {
+        isZombieAwake = false;
         agent = GetComponent<NavMeshAgent>();
+        agent.enabled = false;
         target = GameObject.FindWithTag("Player").transform; // Busca al jugador por su tag
+
+        StageBuilder.instance.OnLevelBuild += ResetZombie;
+    }
+
+    void ResetZombie()
+    {
+        transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
+        isZombieAwake = true;
+        agent.enabled = true;
     }
 
     void Update()
     {
+        if (!isZombieAwake) return;
+
         m_Distance = Vector3.Distance(target.position, transform.position);
 
         // Verifica si el jugador está dentro del rango de visión

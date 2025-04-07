@@ -11,6 +11,7 @@ public class RoomGeneratorNxN : RoomGenerator
 
     public override bool Evaluate(Vector2Int origin, List<Vector2Int> map, out Vector2Int[] consumed)
     {
+        Debug.LogError("Doesnt work");
         Vector2Int[] corners = { origin, origin, origin, origin };
         Vector2Int[] steps = { Vector2Int.up + Vector2Int.right , Vector2Int.up + Vector2Int.left , Vector2Int.down + Vector2Int.right , Vector2Int.down + Vector2Int.left };
         
@@ -77,6 +78,7 @@ public class RoomGeneratorNxN : RoomGenerator
 
     protected override void Generate()
     {
+        Debug.LogError("Doesnt work");
         Debug.Log("NxN contains > " + roomTiles.Count + " elements");
         foreach (Vector2Int roomTile in roomTiles)
         {

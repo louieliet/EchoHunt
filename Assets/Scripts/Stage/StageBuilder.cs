@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class StageBuilder : MonoBehaviour
 {
+    public System.Action OnLevelBuild;
+
     public RoomGenerator[] RoomGenerators;
+
+    public static StageBuilder instance;
 
     [SerializeField] private Vector2Int StageDimensions = new Vector2Int(10, 10);
     [SerializeField] private int LabCount = 5;
@@ -13,8 +18,13 @@ public class StageBuilder : MonoBehaviour
     [SerializeField] private float LevelScale = 3f;
     private List<Vector2Int> StageBlob = new(); // El área generada a partir de la cual generaremos cuartos.
 
+    private NavMeshSurface navMeshSurface;
+
     void Start()
     {
+        instance = this;
+        navMeshSurface = GetComponent<NavMeshSurface>();
+
         GenerateStageBlob();
         GenerateLevelGeometry();
     }
@@ -91,10 +101,20 @@ public class StageBuilder : MonoBehaviour
         StartCoroutine(ScaleCoroutine());
     }
 
+    public Vector3 GetRandomPositionAtMaze()
+    {
+        Vector2Int RandomSpot = StageBlob[Random.Range(0, StageBlob.Count)];
+        Vector3 RealPosition = new Vector3(RandomSpot.x, 0, RandomSpot.y) * LevelScale;
+
+        return RealPosition;
+    }
+
     IEnumerator ScaleCoroutine()
     {
-        yield return null;
+        yield return new WaitForEndOfFrame();
         transform.localScale = Vector3.one * LevelScale;
+        navMeshSurface.BuildNavMesh();
+        OnLevelBuild?.Invoke();
     }
 
     /*

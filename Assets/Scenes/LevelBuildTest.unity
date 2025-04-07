@@ -150,10 +150,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RoomGenerators:
-  - {fileID: 2712234563325381650, guid: 22190e1fab9f319449628d2a0900d7a0, type: 3}
+  - {fileID: 1194145499818299069, guid: 92fc28f9fe26ea4468ec1a8fdb164eb6, type: 3}
   StageDimensions: {x: 15, y: 15}
   LabCount: 7
   NoiseCount: 20
+  LevelScale: 3
 --- !u!4 &378267669
 Transform:
   m_ObjectHideFlags: 0

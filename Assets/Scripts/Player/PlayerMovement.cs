@@ -25,6 +25,20 @@ public class PlayerMovement : MonoBehaviour
         controls.Player.Move.canceled += ctx => OnMovement(Vector2.zero); // Reinicia el movimiento cuando no hay entrada
     }
 
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+
+        StageBuilder.instance.OnLevelBuild += ResetPlayer;
+    }
+
+    void ResetPlayer()
+    {
+        transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
+
+    }
+
     void OnEnable()
     {
         controls.Enable();
@@ -66,11 +80,5 @@ public class PlayerMovement : MonoBehaviour
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
-    }
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
     }
 }
