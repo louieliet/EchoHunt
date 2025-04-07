@@ -1,21 +1,103 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class StageBuilder : MonoBehaviour
 {
-    public Transform start;
-    public Transform end;
-    public Transform walls;
+    public RoomGenerator[] RoomGenerators;
 
-    private LineRenderer line;
+    [SerializeField] private Vector2Int StageDimensions = new Vector2Int(10, 10);
+    [SerializeField] private int LabCount = 5;
+    [SerializeField] private int NoiseCount = 15;
+    [SerializeField] private float LevelScale = 3f;
+    private List<Vector2Int> StageBlob = new(); // El área generada a partir de la cual generaremos cuartos.
 
     void Start()
     {
-        line = GetComponent<LineRenderer>();
-        StartCoroutine(coroutine());
+        GenerateStageBlob();
+        GenerateLevelGeometry();
     }
 
+    private void GenerateStageBlob()
+    {
+        List<Vector2Int> BaseRooms = new();
+        List<Vector2Int> Walls = new();
+
+        // Para esta version de prueba, generar áreas al azar
+        for (int i = 0; i < LabCount; i++)
+        {
+            Vector2Int current = new Vector2Int(Random.Range(0, StageDimensions.x), Random.Range(0, StageDimensions.y));
+            BaseRooms.Add(current);
+            StageBlob.Add(current);
+        }
+
+        // Para esta version de prueba, generar paredes al azar
+        for (int i = 0; i < NoiseCount; i++)
+        {
+            Vector2Int current = new Vector2Int(Random.Range(0, StageDimensions.x), Random.Range(0, StageDimensions.y));
+            Walls.Add(current);
+        }
+
+        // Connect all lab rooms among themselves
+        for (int i = 0; i < BaseRooms.Count; i++)
+        {
+            for (int j = i + 1; j < BaseRooms.Count; j++)
+            {
+                List<Vector2Int> route = Pathfinding.FindRoute(Walls, BaseRooms[i], BaseRooms[j]);
+                if (route == null)   // Si la conexion fue creada, añadir todos los cuartos al blob
+                {
+                    Debug.Log("Failed to create route");
+                    continue;
+                }
+                foreach (Vector2Int piece in route)
+                {
+                    if (!StageBlob.Contains(piece))
+                        StageBlob.Add(piece);
+                }
+                
+            }
+        }
+    }
+
+    private void GenerateLevelGeometry()
+    {   
+        // Ordenar por complejidad de los cuartos
+        System.Array.Sort(RoomGenerators, (a, b) => b.Complexity.CompareTo(a.Complexity));
+        HashSet<Vector2Int> PendingRooms = new(StageBlob);
+
+        while(PendingRooms.Count > 0)
+        {
+            Vector2Int room = PendingRooms.First();
+            foreach (RoomGenerator gen in RoomGenerators)
+            {
+                Vector2Int[] consumed;
+                if(gen.Evaluate(room, PendingRooms.ToList(), out consumed))
+                {
+                    Vector3 Position = new Vector3(room.x, 0, room.y);
+
+                    RoomGenerator newRoom = (RoomGenerator)Instantiate(gen, Position, Quaternion.identity);
+                    newRoom.SetGenerator(consumed, StageBlob);
+                    newRoom.transform.SetParent(transform);
+
+                    foreach(Vector2Int c in consumed)
+                    {
+                        PendingRooms.Remove(c);
+                    }
+                }
+            }
+        }
+
+        StartCoroutine(ScaleCoroutine());
+    }
+
+    IEnumerator ScaleCoroutine()
+    {
+        yield return null;
+        transform.localScale = Vector3.one * LevelScale;
+    }
+
+    /*
     IEnumerator coroutine()
     {
         yield return new WaitForSeconds(1f);
@@ -38,38 +120,5 @@ public class StageBuilder : MonoBehaviour
         }
 
         StartCoroutine(coroutine());
-    }
-    /*
-    private void Fractal(Vector3 origin, float direction, int depth)
-    {
-        if (depth > DivisionAmount) return;
-
-        // Instantiate random room
-        GameObject current = Instantiate(StagePrefabs[Random.Range(0, StagePrefabs.Length)], origin, Quaternion.identity);
-
-        // Get available plugs
-        Transform conncetions = current.transform.Find("Plugs");
-
-        // Get the plug the new room is sprawling from
-        Transform originNode = conncetions.transform.GetChild(Random.Range(0, conncetions.transform.childCount));
-
-        // Set transform
-        current.transform.rotation = Quaternion.Euler(0, direction - originNode.eulerAngles.y, 0);
-        current.transform.Rotate(0, 180, 0);
-        current.transform.position = origin - current.transform.rotation * originNode.localPosition;
-
-        // Cancel the plug that was used to first set the room
-        originNode.gameObject.SetActive(false);
-
-        // Depth's been added by 1
-        depth++;
-
-        // For each plug that wasn't used, add another room.
-        foreach (Transform connectionNode in conncetions)
-        {
-            if (connectionNode.gameObject.activeSelf)
-                Fractal(connectionNode.position, connectionNode.eulerAngles.y, depth);
-        }
-    }
-    */
+    }*/
 }

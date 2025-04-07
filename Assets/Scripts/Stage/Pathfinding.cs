@@ -16,22 +16,22 @@ public class Pathfinding : MonoBehaviour
     {
         int Iterations = 0;
 
-        Debug.Log("Start routing");
+        // Debug.Log("Start routing: Connecting > " + origin + " > with > " + destination);
         PathfindingNode start = new PathfindingNode(origin);
         start.SetParams(0, GetDistance(origin, destination));
         start.SetParent(null);
 
-        HashSet<PathfindingNode> openList = new();    // Nodos candidatos
+        List<PathfindingNode> openList = new();    // Nodos candidatos
         List<PathfindingNode> closedList = new();  // Nodos bien evaluados
 
         openList.Add(start);
 
-        while (openList.Count > 0 && Iterations > maxIter)
+        while (openList.Count > 0 && Iterations < maxIter)
         {
             Iterations++;
 
             PathfindingNode currentNode = openList.Min(); // Get node of lowest F value
-            Debug.Log("Starting at node > " + currentNode.GetPosition());
+            // Debug.Log("Starting at node > " + currentNode.GetPosition());
 
             if (currentNode == destination)
                 return BuildRoute(currentNode); // Ha terminado el algoritmo
@@ -39,52 +39,53 @@ public class Pathfinding : MonoBehaviour
             openList.Remove(currentNode);
             closedList.Add(currentNode);
 
-            Debug.Log("Check neighbors!");
+            // Debug.Log("Check neighbors!");
             PathfindingNode[] currentNeighbors = currentNode.GetNeighbors();
             foreach(PathfindingNode n in currentNeighbors)
             {
-                Debug.Log("Evaluating neighbor > " + n.GetPosition());
+                // Debug.Log("Evaluating neighbor > " + n.GetPosition());
                 if (closedList.Contains(n))
                 {  // Saltarse nodos que ya evaluamos
-                    Debug.Log("Already evaluated from openlist");
+                    // Debug.Log("Already evaluated from openlist");
                     continue;
                 }
 
                 if (walls.Contains(n.GetPosition()))
                 {
-                    Debug.Log("Hit wall");
+                    // Debug.Log("Hit wall");
                     continue;
                 }
 
                 PathfindingNode existingNode = openList.Find(node => node.GetPosition() == n.GetPosition());
                 int newCost = currentNode.GetCost() + 1; // We move through the grid one step at a time 
 
-                Debug.Log("Is node in list? > "+(existingNode == null));
+                // Debug.Log("Is node in list? > "+(existingNode == null));
                 if (existingNode == null)
                 {
-                    Debug.Log("Added to open list");
+                    // Debug.Log("Added to open list");
                     existingNode = n;
                     openList.Add(n);
                 }
                 else if(newCost > n.GetCost())
                 {
-                    Debug.Log("Skipped because this node is already reached from a better path");
+                    // Debug.Log("Skipped because this node is already reached from a better path");
                     continue;   // Saltarse si este camino no es el mas eficiente
                 }
 
-                Debug.Log("Node data updated");
+                // Debug.Log("Node data updated");
                 existingNode.SetParent(currentNode);
                 existingNode.SetParams(newCost, GetDistance(n.GetPosition(), destination));
             }
         }
-
-        Debug.Log("Failed to find a path");
+        //if (Iterations < maxIter)
+            // Debug.Log("Max Iterations reached");
+        // Debug.Log("Failed to find a path");
         return null;    // El algoritmo ha fallado
     }
 
     private static List<Vector2Int> BuildRoute(PathfindingNode node)
     {
-        Debug.Log("Building return path!");
+        // Debug.Log("Building return path!");
         List<Vector2Int> finalpos = new();
         PathfindingNode c = node;
 
