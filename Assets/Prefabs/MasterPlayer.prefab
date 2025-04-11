@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 146899053820519210}
   - component: {fileID: 2205655886891336672}
   - component: {fileID: 2284421221464100176}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 1391855162641510980}
   m_Layer: 0
   m_Name: MasterPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -265,11 +265,14 @@ MonoBehaviour:
   moveSpeed: 7
   groundDrag: 5
   playerHeight: 2
-  isGrounded: 0
   groundMask:
     serializedVersion: 2
     m_Bits: 8
   orientation: {fileID: 7185238294347034421}
+  noiseRadius: 5
+  sprintNoiseMultiplier: 1.5
+  showNoiseGizmo: 1
+  noiseGizmoColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!195 &7955945659375521871
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -277,7 +280,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2367750430265196736}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 1
