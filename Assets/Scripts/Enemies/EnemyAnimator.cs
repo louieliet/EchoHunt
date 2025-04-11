@@ -1,4 +1,5 @@
 using UnityEngine;
+
 [RequireComponent(typeof(Animator))]
 public class EnemyAnimator : MonoBehaviour
 {
@@ -9,13 +10,15 @@ public class EnemyAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void OnWalkAnimation()
+    public void SetWalking(bool isWalking)
     {
-        animator.SetTrigger("isWalking");
+        animator.SetBool("isWalking", isWalking);
+        animator.SetBool("isIdle", !isWalking);
     }
 
-    public void OnIdleAnimation()
+    public void SetIdle(bool isIdle)
     {
-        animator.SetTrigger("isIdle");
+        animator.SetBool("isIdle", isIdle);
+        animator.SetBool("isWalking", !isIdle);
     }
 }
