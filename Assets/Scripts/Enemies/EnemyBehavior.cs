@@ -27,6 +27,7 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private LayerMask soundObstacleLayers;
 
     private PlayerMovement _playerMovement;
+    private EnemyAnimator _enemyAnimator;
     private bool isZombieAwake;
 
     private void Start()
@@ -36,6 +37,7 @@ public class EnemyBehavior : MonoBehaviour
         agent.enabled = false;
         target = GameObject.FindWithTag("Player").transform;
         _playerMovement = target.GetComponent<PlayerMovement>();
+        _enemyAnimator = GetComponent<EnemyAnimator>();
 
         StageBuilder.instance.OnLevelBuild += ResetZombie;
     }
@@ -59,9 +61,10 @@ public class EnemyBehavior : MonoBehaviour
         switch (currentState)
         {
             case ZombieState.Idle:
+                _enemyAnimator.SetWalking(false); // Animación Idle
+
                 if (canHearPlayer && !canSeePlayer)
                 {
-                    // Pasa a estado alerta si solo oye al jugador
                     currentState = ZombieState.Alert;
                 }
                 else if (canSeePlayer)
@@ -72,14 +75,15 @@ public class EnemyBehavior : MonoBehaviour
                 break;
 
             case ZombieState.Alert:
-                // En estado alerta, el zombie puede girar lentamente hacia el sonido
+                _enemyAnimator.SetWalking(true); // Animación de "caminar alerta" (puede ser la misma que caminar normal)
+
                 RotateTowards(target.position);
+
                 if (canSeePlayer)
                 {
                     currentState = ZombieState.Chase;
                     OnPlayerSpotted.Invoke();
                 }
-                // Si por un tiempo no detecta nada, vuelve al Idle
                 else if (!canHearPlayer)
                 {
                     currentState = ZombieState.Idle;
@@ -88,6 +92,8 @@ public class EnemyBehavior : MonoBehaviour
                 break;
 
             case ZombieState.Chase:
+                _enemyAnimator.SetWalking(true); // Animación de caminar/persiguiendo
+
                 if (m_Distance <= attackDistance)
                 {
                     agent.isStopped = true;
@@ -97,7 +103,7 @@ public class EnemyBehavior : MonoBehaviour
                     agent.isStopped = false;
                     agent.destination = target.position;
                 }
-                // Si pierde ambos sentidos, vuelve a estado Idle
+
                 if (!canSeePlayer && !canHearPlayer)
                 {
                     currentState = ZombieState.Idle;
