@@ -8,27 +8,22 @@ public class PlayerCamera : MonoBehaviour
     public Transform orientation;
     private float xRotation;
     private float yRotation;
-    private PlayerControls controls;
     private bool isUsingController = false;
 
     void Awake()
     {
-        controls = new PlayerControls();
-        controls.Player.Look.performed += ctx => OnLook(ctx.ReadValue<Vector2>());
+        PlayerController.controller.Player.Look.performed += OnLook;
     }
 
-    void OnEnable()
+    void OnDestroy()
     {
-        controls.Enable();
+        PlayerController.controller.Player.Look.performed -= OnLook;
     }
 
-    void OnDisable()
+    void OnLook(InputAction.CallbackContext ctx)
     {
-        controls.Disable();
-    }
+        Vector2 lookInput = ctx.ReadValue<Vector2>();
 
-    void OnLook(Vector2 lookInput)
-    {
         // Detectar dispositivo actual
         isUsingController = lookInput.magnitude > 0.1f && Gamepad.all.Count > 0;
 

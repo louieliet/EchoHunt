@@ -1775,6 +1775,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 578376449398627443}
+  - component: {fileID: 3539708281615098125}
   - component: {fileID: 7389507112651452681}
   - component: {fileID: 1067960147333228949}
   - component: {fileID: 7780812079479146096}
@@ -1818,6 +1819,18 @@ Transform:
   - {fileID: 5639161080653917801}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3539708281615098125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4493914613880827488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2351326833c7d2f4d961b1a7e830be46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &7389507112651452681
 Animator:
   serializedVersion: 7
@@ -1932,6 +1945,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  hearingRange: 8
+  soundObstacleLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &3392034413602828551
 MonoBehaviour:
   m_ObjectHideFlags: 0

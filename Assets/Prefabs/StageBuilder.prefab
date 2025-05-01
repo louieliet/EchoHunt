@@ -47,9 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RoomGenerators:
   - {fileID: 1194145499818299069, guid: 92fc28f9fe26ea4468ec1a8fdb164eb6, type: 3}
-  StageDimensions: {x: 15, y: 15}
+  StageDimensions: {x: 5, y: 5}
   LabCount: 7
-  NoiseCount: 20
+  NoiseCount: 7
   LevelScale: 7
 --- !u!114 &2579614441118944535
 MonoBehaviour:

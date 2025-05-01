@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform orientation;
     private Vector2 movementInput;
     private Rigidbody rb;
-    private PlayerControls controls;
 
     [Header("Sound")]
     [SerializeField] private float noiseRadius = 5f;
@@ -27,18 +26,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool showNoiseGizmo = true;
     [SerializeField] private Color noiseGizmoColor = Color.cyan;
 
-
-    void Awake()
-    {
-        controls = new PlayerControls();
-        controls.Player.Move.performed += ctx => OnMovement(ctx.ReadValue<Vector2>());
-        controls.Player.Move.canceled += ctx => OnMovement(Vector2.zero); // Reinicia el movimiento cuando no hay entrada
-    }
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        PlayerController.controller.Player.Move.performed += ctx => OnMovement(ctx.ReadValue<Vector2>());
+        PlayerController.controller.Player.Move.canceled += ctx => OnMovement(Vector2.zero); // Reinicia el movimiento cuando no hay entrada
+
+        GameManager.player = this.transform;
 
         StageBuilder.instance.OnLevelBuild += ResetPlayer;
     }
@@ -47,16 +43,6 @@ public class PlayerMovement : MonoBehaviour
     {
         transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
 
-    }
-
-    void OnEnable()
-    {
-        controls.Enable();
-    }
-
-    void OnDisable()
-    {
-        controls.Disable();
     }
 
     void OnMovement(Vector2 input)

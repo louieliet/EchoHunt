@@ -30,6 +30,8 @@ public class EnemyBehavior : MonoBehaviour
     private EnemyAnimator _enemyAnimator;
     private bool isZombieAwake;
 
+    private float stunTimer;
+
     private void Start()
     {
         isZombieAwake = false;
@@ -40,6 +42,13 @@ public class EnemyBehavior : MonoBehaviour
         _enemyAnimator = GetComponent<EnemyAnimator>();
 
         StageBuilder.instance.OnLevelBuild += ResetZombie;
+
+        GameManager.instance.OnQTEExit += Stun;
+    }
+
+    private void Stun()
+    {
+        stunTimer = 2f;
     }
 
     private void ResetZombie()
@@ -52,6 +61,9 @@ public class EnemyBehavior : MonoBehaviour
 
     private void Update()
     {
+        stunTimer -= Time.deltaTime;
+
+        if (stunTimer > 0f) return;
         if (!isZombieAwake) return;
 
         m_Distance = Vector3.Distance(target.position, transform.position);
@@ -160,6 +172,14 @@ public class EnemyBehavior : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 2f);
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (stunTimer > 0f) return;
+
+        if (collision.gameObject.CompareTag("Player"))
+            GameManager.instance.EnterQTE();
     }
 
     // Visualización del campo en el Editor

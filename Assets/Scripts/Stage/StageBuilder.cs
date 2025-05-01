@@ -57,7 +57,6 @@ public class StageBuilder : MonoBehaviour
                 List<Vector2Int> route = Pathfinding.FindRoute(Walls, BaseRooms[i], BaseRooms[j]);
                 if (route == null)   // Si la conexion fue creada, añadir todos los cuartos al blob
                 {
-                    Debug.Log("Failed to create route");
                     continue;
                 }
                 foreach (Vector2Int piece in route)
