@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class QTEManager : MonoBehaviour
+public abstract class QTEManager : MonoBehaviour
 {
     public float MaxDelayWait = 0.1f;
     public float ReactionWindowOpen = 0.01f;
@@ -16,28 +16,45 @@ public class QTEManager : MonoBehaviour
     private bool canDefend;
     private bool Clicked;
 
+    public static QTEManager currentQTE { get; protected set; }
+    public static Transform initiator { get; protected set; }
+
     void Awake()
     {
-        masterAnimator = GetComponent<Animator>();
+        Init();
 
-        GameManager.instance.OnQTEEnter += QTEEnter;
-        GameManager.instance.OnQTEExit += QTEExit;
+        masterAnimator = GetComponent<Animator>();
 
         PlayerController.controller.Player.Attack.performed += OnClick;
 
         Debug.Log("Assigned the everything");
 
+        GameManager.instance.OnQTEExit += Deactivate;
+
         gameObject.SetActive(false);
     }
 
-    void QTEEnter()
+    void OnDestroy()
+    {
+        if (GameManager.instance == null) return;
+        GameManager.instance.OnQTEExit -= Deactivate;
+    }
+
+    abstract protected void Init();
+
+    void Deactivate(Transform caller)
+    {
+        gameObject.SetActive(false);
+    }
+
+    protected void StartQTE()
     {
         gameObject.SetActive(true);
-    }
 
-    void QTEExit()
-    {
-        gameObject.SetActive(false);
+        QTEVolumeEffect.SetTension(10f, 0.2f, 0.3f);
+
+        currentQTE = this;
+        GameManager.EnterQTE();
     }
 
     void OnEnable()
@@ -45,6 +62,7 @@ public class QTEManager : MonoBehaviour
         Debug.Log("QTE called");
 
         transform.position = GameManager.player.position;
+        transform.rotation = initiator.rotation;
 
         masterAnimator.SetTrigger("Enter");
         zombieAnimator.SetTrigger("Reset");
@@ -63,12 +81,21 @@ public class QTEManager : MonoBehaviour
 
     public void SuccesfulExitEvent()
     {
-        GameManager.instance.ExitQTE();
+        currentQTE = null;
+        GameManager.ExitQTE(initiator);
+
+        QTEVolumeEffect.SetTension(1f, 0.05f, 0.418f);
+
+        gameObject.SetActive(false);
     }
 
     public void GameOverEvent()
     {
-        GameManager.instance.GameOver();
+        currentQTE = null;
+
+        QTEVolumeEffect.SetTension(1f, 0.05f, 1f);
+
+        GameManager.GameOver();
     }
 
     public void StartReaction()
@@ -91,19 +118,16 @@ public class QTEManager : MonoBehaviour
         bool SuccesfulDefense = false;
         canDefend = true;
 
-        Debug.Log("Initiate clicking listening. Was click already clicked? > " + Clicked);
         if (!Clicked)
         {
             yield return new WaitForSecondsRealtime(ReactionWindowOpen);
 
-            Debug.Log("During window reaction, was click clicked? > " + Clicked);
             if (Clicked)
                 SuccesfulDefense = true;
         }
 
         canDefend = false;
 
-        Debug.Log("Was defense succesful? > " + SuccesfulDefense);
 
         Time.timeScale = 1f;
 

@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class QTEParryActivator : MonoBehaviour
 {
-    private QTEManager qtemanager;
+    private QTEManager manager;
 
     void Start()
     {
-        qtemanager = transform.parent.GetComponent<QTEManager>();
+        manager = transform.parent.GetComponent<QTEManager>();
     }
 
     public void StartReaction()
     {
-        qtemanager.StartReaction();
+        manager.StartReaction();
     }
 }

@@ -2720,7 +2720,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1580085075041781331}
   - component: {fileID: 7733765367762412294}
-  - component: {fileID: 621118164867729776}
+  - component: {fileID: 5747698444817907116}
   m_Layer: 0
   m_Name: QTE Regular Zombie
   m_TagString: Untagged
@@ -2767,7 +2767,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &621118164867729776
+--- !u!114 &5747698444817907116
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2776,7 +2776,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7665586992725575443}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2843bfe714d4184b9e837d5dc592d9a, type: 3}
+  m_Script: {fileID: 11500000, guid: f9f2dac84e908be4d82fa71293f66617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MaxDelayWait: 0.1

@@ -1,15 +1,15 @@
+using UnityEditor.Callbacks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField, Range(0, 100)] private float moveSpeed;
-    [SerializeField, Range(0, 100)] private float groundDrag;
 
     [Header("Ground Check")]
     [SerializeField] private float playerHeight;
-    public LayerMask groundMask;
 
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -37,6 +37,28 @@ public class PlayerMovement : MonoBehaviour
         GameManager.player = this.transform;
 
         StageBuilder.instance.OnLevelBuild += ResetPlayer;
+
+        GameManager.instance.OnQTEExit += SuccesfulQTEDefense;
+
+    
+
+    }
+
+    void OnDestroy()
+    {
+        if (GameManager.instance == null) return;
+        GameManager.instance.OnQTEExit -= SuccesfulQTEDefense;
+    }
+
+    void SuccesfulQTEDefense(Transform caller)
+    {
+        if (caller == null) return;
+
+        Vector3 newCallerPosition = caller.position;
+        newCallerPosition.y = transform.position.y;
+
+        Vector3 direction = (transform.position - newCallerPosition).normalized;
+        rb.linearVelocity = direction * 5f;
     }
 
     void ResetPlayer()

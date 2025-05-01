@@ -13,11 +13,28 @@ public class PlayerCamera : MonoBehaviour
     void Awake()
     {
         PlayerController.controller.Player.Look.performed += OnLook;
+
+        GameManager.instance.OnQTEExit += SuccesfulQTEDefense;
     }
 
     void OnDestroy()
     {
         PlayerController.controller.Player.Look.performed -= OnLook;
+
+        if (GameManager.instance == null) return;
+        GameManager.instance.OnQTEExit -= SuccesfulQTEDefense;
+    }
+
+    void SuccesfulQTEDefense(Transform caller)
+    {
+        if (caller == null) return;
+
+        // ayudame aqui
+        transform.forward = (caller.position - transform.position).normalized;
+        yRotation = transform.localRotation.eulerAngles.y;
+        xRotation = transform.localRotation.eulerAngles.x;
+
+        orientation.localRotation = Quaternion.Euler(0, yRotation, 0);
     }
 
     void OnLook(InputAction.CallbackContext ctx)

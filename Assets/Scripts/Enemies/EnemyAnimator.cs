@@ -8,17 +8,25 @@ public class EnemyAnimator : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+
+        GameManager.instance.OnQTEExit += Stun;
+
     }
 
-    public void SetWalking(bool isWalking)
+    void OnDestroy()
     {
-        animator.SetBool("isWalking", isWalking);
-        animator.SetBool("isIdle", !isWalking);
+        if (GameManager.instance == null) return;
+        GameManager.instance.OnQTEExit -= Stun;
     }
 
-    public void SetIdle(bool isIdle)
+    private void Stun(Transform caller)
     {
-        animator.SetBool("isIdle", isIdle);
-        animator.SetBool("isWalking", !isIdle);
+        animator.SetTrigger("Stun");
+    }
+
+    public void StateChange(ZombieState newState)
+    {
+        animator.SetBool("isWalking", newState == ZombieState.Alert);
+        animator.SetBool("isChasing", newState == ZombieState.Chase);
     }
 }

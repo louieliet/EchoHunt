@@ -1911,7 +1911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  attackDistance: 0
+  attackDistance: 2
   visionRange: 10
   visionAngle: 90
   EyesReference: {fileID: 5639161080653917801}

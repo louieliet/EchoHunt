@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -16,7 +17,7 @@ public class EnemyBehavior : MonoBehaviour
 
     private NavMeshAgent agent;
     private float m_Distance;
-    private ZombieState currentState = ZombieState.Idle;
+    public ZombieState currentState { get; private set; }
 
     [Header("Events")]
     public UnityEvent OnPlayerSpotted;
@@ -37,7 +38,7 @@ public class EnemyBehavior : MonoBehaviour
         isZombieAwake = false;
         agent = GetComponent<NavMeshAgent>();
         agent.enabled = false;
-        target = GameObject.FindWithTag("Player").transform;
+        target = GameManager.player;
         _playerMovement = target.GetComponent<PlayerMovement>();
         _enemyAnimator = GetComponent<EnemyAnimator>();
 
@@ -46,9 +47,16 @@ public class EnemyBehavior : MonoBehaviour
         GameManager.instance.OnQTEExit += Stun;
     }
 
-    private void Stun()
+    void OnDestroy()
+    {
+        if (GameManager.instance == null) return;
+        GameManager.instance.OnQTEExit -= Stun;
+    }
+
+    private void Stun(Transform initiator)
     {
         stunTimer = 2f;
+        transform.forward = (target.position - transform.position).normalized;
     }
 
     private void ResetZombie()
@@ -73,7 +81,7 @@ public class EnemyBehavior : MonoBehaviour
         switch (currentState)
         {
             case ZombieState.Idle:
-                _enemyAnimator.SetWalking(false); // Animación Idle
+                _enemyAnimator.StateChange(currentState); // Animación Idle
 
                 if (canHearPlayer && !canSeePlayer)
                 {
@@ -87,7 +95,7 @@ public class EnemyBehavior : MonoBehaviour
                 break;
 
             case ZombieState.Alert:
-                _enemyAnimator.SetWalking(true); // Animación de "caminar alerta" (puede ser la misma que caminar normal)
+                _enemyAnimator.StateChange(currentState); // Animación de "caminar alerta" (puede ser la misma que caminar normal)
 
                 RotateTowards(target.position);
 
@@ -104,11 +112,12 @@ public class EnemyBehavior : MonoBehaviour
                 break;
 
             case ZombieState.Chase:
-                _enemyAnimator.SetWalking(true); // Animación de caminar/persiguiendo
+                _enemyAnimator.StateChange(currentState); // Animación de caminar/persiguiendo
 
                 if (m_Distance <= attackDistance)
                 {
                     agent.isStopped = true;
+                    RegularZombieQTE.EnterRegularZombieQTE(EyesReference);
                 }
                 else
                 {
@@ -172,14 +181,6 @@ public class EnemyBehavior : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 2f);
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (stunTimer > 0f) return;
-
-        if (collision.gameObject.CompareTag("Player"))
-            GameManager.instance.EnterQTE();
     }
 
     // Visualización del campo en el Editor

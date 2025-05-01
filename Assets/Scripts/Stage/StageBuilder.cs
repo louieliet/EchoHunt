@@ -111,9 +111,13 @@ public class StageBuilder : MonoBehaviour
     IEnumerator ScaleCoroutine()
     {
         yield return new WaitForEndOfFrame();
+
         transform.localScale = Vector3.one * LevelScale;
+
         navMeshSurface.BuildNavMesh();
         OnLevelBuild?.Invoke();
+
+        GameManager.StartGame();
     }
 
     /*

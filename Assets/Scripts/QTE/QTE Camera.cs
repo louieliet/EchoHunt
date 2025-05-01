@@ -8,20 +8,54 @@ public class QTECamera : MonoBehaviour
     private Quaternion originalRotation;
     private Transform cameraTransform;
 
+    private float slowerTiming;
+
     void Awake()
     {
         cameraTransform = transform;
         originalRotation = cameraTransform.localRotation;
 
-        StartCoroutine(ShakePart());
+        GameManager.instance.OnQTEEnter += StartShaking;
+        GameManager.instance.OnQTEExit += StopShaking;
+        GameManager.instance.OnGameOver += SlowShaking;
     }
 
-    IEnumerator ShakePart()
+    private void OnDestroy()
+    {
+        if (GameManager.instance == null) return;
+        GameManager.instance.OnQTEEnter -= StartShaking;
+        GameManager.instance.OnQTEExit -= StopShaking;
+        GameManager.instance.OnGameOver -= SlowShaking;
+    }
+
+    private void StartShaking()
+    {
+        StopAllCoroutines();
+        StartCoroutine(ShakePart(true));
+    }
+
+    private void SlowShaking()
+    {
+        StopAllCoroutines();
+        slowerTiming = 0.1f;
+        StartCoroutine(ShakePart(false));
+    }
+
+    private void StopShaking(Transform caller)
+    {
+        StopAllCoroutines();
+    }
+
+    IEnumerator ShakePart(bool isQuick)
     {
         float timer = 0f;
-        float duration = Random.Range(0.1f, 0.2f);
+        float duration;
+        if (isQuick)
+            duration = Random.Range(0.05f, 0.1f);
+        else
+            duration = slowerTiming;
 
-        Quaternion origin = cameraTransform.localRotation;
+            Quaternion origin = cameraTransform.localRotation;
         Quaternion target = originalRotation;
         target *= Quaternion.Euler(Random.Range(-AngleShake, AngleShake), Random.Range(-AngleShake, AngleShake), Random.Range(-AngleShake, AngleShake));
 
@@ -33,6 +67,9 @@ public class QTECamera : MonoBehaviour
             yield return null;
         }
 
-        StartCoroutine(ShakePart());
+        if (!isQuick)
+            slowerTiming *= Random.Range(1f, 1.6f);
+
+        StartCoroutine(ShakePart(isQuick));
     }
 }
