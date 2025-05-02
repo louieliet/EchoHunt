@@ -16,7 +16,11 @@ public class StageBuilder : MonoBehaviour
     [SerializeField] private int LabCount = 5;
     [SerializeField] private int NoiseCount = 15;
     [SerializeField] private float LevelScale = 3f;
-    private List<Vector2Int> StageBlob = new(); // El área generada a partir de la cual generaremos cuartos.
+
+    private HashSet<Vector2Int> StageBlob = new(); // El área generada a partir de la cual generaremos cuartos.
+    private HashSet<RoomSchema> StageSchema = new();   // El lugar donde generaremos y guardaremos nuestros cuartos generados
+
+    private List<Vector2Int> RandomPositions;
 
     private NavMeshSurface navMeshSurface;
 
@@ -25,8 +29,13 @@ public class StageBuilder : MonoBehaviour
         instance = this;
         navMeshSurface = GetComponent<NavMeshSurface>();
 
+        // Ordenar por complejidad de los cuartos
+        System.Array.Sort(RoomGenerators, (a, b) => b.Complexity.CompareTo(a.Complexity));
+
         GenerateStageBlob();
-        GenerateLevelGeometry();
+        GenerateStageSchema();
+        ResolveDoorPlacement();
+        GenerateStageGeometry();
     }
 
     private void GenerateStageBlob()
@@ -69,10 +78,8 @@ public class StageBuilder : MonoBehaviour
         }
     }
 
-    private void GenerateLevelGeometry()
+    private void GenerateStageSchema()
     {   
-        // Ordenar por complejidad de los cuartos
-        System.Array.Sort(RoomGenerators, (a, b) => b.Complexity.CompareTo(a.Complexity));
         HashSet<Vector2Int> PendingRooms = new(StageBlob);
 
         while(PendingRooms.Count > 0)
@@ -80,21 +87,45 @@ public class StageBuilder : MonoBehaviour
             Vector2Int room = PendingRooms.First();
             foreach (RoomGenerator gen in RoomGenerators)
             {
-                Vector2Int[] consumed;
-                if(gen.Evaluate(room, PendingRooms.ToList(), out consumed))
+                RoomSchema testSchema = gen.Evaluate(room, PendingRooms, StageBlob);
+                if(testSchema.isValidSchema)
                 {
-                    Vector3 Position = new Vector3(room.x, 0, room.y);
+                    StageSchema.Add(testSchema);
+                    PendingRooms.ExceptWith(testSchema.roomTiles);  // Delete consumed tiles
 
-                    RoomGenerator newRoom = (RoomGenerator)Instantiate(gen, Position, Quaternion.identity);
-                    newRoom.SetGenerator(consumed, StageBlob);
-                    newRoom.transform.SetParent(transform);
-
-                    foreach(Vector2Int c in consumed)
-                    {
-                        PendingRooms.Remove(c);
-                    }
+                    break;
                 }
             }
+        }
+    }
+
+    private void ResolveDoorPlacement()
+    {
+        List<RoomSchema> PendingSchemaList = new(StageSchema);
+
+        for(int a = 0; a < PendingSchemaList.Count; a++)
+        {
+            RoomSchema SchemaA = PendingSchemaList[a];
+            for(int b = a + 1; b < PendingSchemaList.Count; b++)
+            {
+                RoomSchema SchemaB = PendingSchemaList[b];
+
+                if (AreRoomsAdjacent(SchemaA, SchemaB))
+                    DiscardExcessDoors(SchemaA, SchemaB);
+            }
+        }
+    }
+
+    private void GenerateStageGeometry()
+    {
+        Queue<RoomSchema> PendingRooms = new(StageSchema);
+
+        foreach (RoomSchema room in PendingRooms)
+        {
+            Vector3 Position = new Vector3(room.origin.x, 0, room.origin.y);
+            RoomGenerator newRoom = (RoomGenerator)Instantiate(room.schemaGenerator, Position, Quaternion.identity);
+            newRoom.SetGenerator(room);
+            newRoom.transform.SetParent(transform);
         }
 
         StartCoroutine(ScaleCoroutine());
@@ -102,8 +133,11 @@ public class StageBuilder : MonoBehaviour
 
     public Vector3 GetRandomPositionAtMaze()
     {
-        Vector2Int RandomSpot = StageBlob[Random.Range(0, StageBlob.Count)];
+        int Index = Random.Range(0, RandomPositions.Count);
+        Vector2Int RandomSpot = RandomPositions[Index];
         Vector3 RealPosition = new Vector3(RandomSpot.x, 0, RandomSpot.y) * LevelScale;
+
+        RandomPositions.RemoveAt(Index);
 
         return RealPosition;
     }
@@ -114,34 +148,68 @@ public class StageBuilder : MonoBehaviour
 
         transform.localScale = Vector3.one * LevelScale;
 
+        RandomPositions = new(StageBlob);
+
         navMeshSurface.BuildNavMesh();
         OnLevelBuild?.Invoke();
 
         GameManager.StartGame();
     }
 
-    /*
-    IEnumerator coroutine()
+    private bool AreRoomsAdjacent(RoomSchema a, RoomSchema b)
     {
-        yield return new WaitForSeconds(1f);
-        List<Vector2Int> wallsVec = new();
-        foreach(Transform w in walls)
+        foreach (Vector2Int adj in a.adjacentRooms)
         {
-            wallsVec.Add(new Vector2Int(Mathf.RoundToInt(w.position.x), Mathf.RoundToInt(w.position.z)));
-        }
-        List<Vector2Int> route = Pathfinding.FindRoute(wallsVec, new Vector2Int(Mathf.RoundToInt(start.position.x), Mathf.RoundToInt(start.position.z)), new Vector2Int(Mathf.RoundToInt(end.position.x), Mathf.RoundToInt(end.position.z)));
-        if (route != null)
-        {
-            Vector3[] realpos = new Vector3[route.Count];
-            for (int i = 0; i < route.Count; i++)
-            {
-                realpos[i].x = route[i].x;
-                realpos[i].z = route[i].y;
-            }
-            line.positionCount = route.Count;
-            line.SetPositions(realpos);
+            // If roomtiles of B contains an element of A adjacency, we can say both rooms are adjacent.
+            if (b.roomTiles.Contains(adj))
+                return true;
         }
 
-        StartCoroutine(coroutine());
-    }*/
+        return false;
+    }
+
+    private void DiscardExcessDoors(RoomSchema a, RoomSchema b)
+    {
+        // Values for A and values for B
+        List<(Vector2Int, Vector2Int)> discardable = new();
+
+        // Add all shared tiles
+        foreach (Vector2Int room in a.roomTiles)
+        {
+            foreach(Vector2Int adj in a.adjacentRooms)
+            {
+                if (Vector2Int.Distance(room, adj) != 1) continue;
+
+                if (b.roomTiles.Contains(adj))
+                    discardable.Add((room, adj));
+            }
+        }
+
+        // Get preferred door amount
+        int doorAmount = Mathf.Max(a.doorAmount, b.doorAmount);
+
+        // Get preferred direction
+        RSHorOrientation horizontalOrientation = a.horizontalOrientation != RSHorOrientation.None ? a.horizontalOrientation : b.horizontalOrientation;
+        RSVerOrientation verticalOrientation = a.verticalOrientation != RSVerOrientation.None ? a.verticalOrientation : b.verticalOrientation;
+
+        // If no preferred direction was provided, set defaults
+        if (horizontalOrientation == RSHorOrientation.None)
+            horizontalOrientation = RSHorOrientation.West;
+        if (verticalOrientation == RSVerOrientation.None)
+            verticalOrientation = RSVerOrientation.North;
+
+        // Sort items based on preferred direction
+        discardable = discardable
+            .OrderBy(pos => horizontalOrientation == RSHorOrientation.West ? pos.Item1.x : -pos.Item1.x)
+            .ThenBy(pos => verticalOrientation == RSVerOrientation.North ? -pos.Item1.y : pos.Item1.y)
+            .ToList();
+
+        // Protect the selected doors
+        int toProtect = Mathf.Min(doorAmount, discardable.Count);
+        discardable.RemoveRange(0, toProtect);
+
+        // Throw away unnecessary rooms and add as walls
+        a.adjacentRooms.ExceptWith(discardable.Select(x => x.Item2));
+        b.adjacentRooms.ExceptWith(discardable.Select(x => x.Item1));
+    }
 }

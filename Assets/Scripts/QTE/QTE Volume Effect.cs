@@ -39,7 +39,7 @@ public class QTEVolumeEffect : MonoBehaviour
 
         GameManager.instance.OnQTEEnter += StartFadeOut;
         GameManager.instance.OnQTEExit += StartFadeOut;
-        GameManager.instance.OnGameOver += StartFadeIn;
+        // GameManager.instance.OnGameOver += StartFadeIn;
     }
 
     void OnDestroy()
@@ -47,7 +47,7 @@ public class QTEVolumeEffect : MonoBehaviour
         if (GameManager.instance == null) return;
         GameManager.instance.OnQTEEnter -= StartFadeOut;
         GameManager.instance.OnQTEExit -= StartFadeOut;
-        GameManager.instance.OnGameOver -= StartFadeIn;
+        // GameManager.instance.OnGameOver -= StartFadeIn;
 
     }
 

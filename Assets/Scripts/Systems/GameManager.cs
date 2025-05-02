@@ -7,8 +7,14 @@ public class GameManager : MonoBehaviour
     public event Action<Transform> OnQTEExit;
     public event Action OnGameOver;
 
+    public event Action OnTotalZombieAmountChange;
+    public event Action OnZombieCapture;
+
     public static GameManager instance { get; private set; }
     public static Transform player;
+
+    public static int capturedZombies { get; private set; }
+    public static int totalZombies { get; private set; }
 
     public Animator GameOverMenu;
 
@@ -36,9 +42,23 @@ public class GameManager : MonoBehaviour
     {
         instance.GameOverMenu.SetTrigger("Reset");
 
+        capturedZombies = 0;
+
         QTEVolumeEffect.SetTension(0.5f, 0.05f, 0.418f);
 
         ExitQTE(null);
+    }
+
+    public static void CreatedZombie()
+    {
+        totalZombies += 1;
+        instance.OnTotalZombieAmountChange?.Invoke();
+    }
+
+    public static void CaptureZombie()
+    {
+        capturedZombies += 1;
+        instance.OnZombieCapture?.Invoke();
     }
 
     public static void GameOver()

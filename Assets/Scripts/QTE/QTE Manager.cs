@@ -93,7 +93,7 @@ public abstract class QTEManager : MonoBehaviour
     {
         currentQTE = null;
 
-        QTEVolumeEffect.SetTension(1f, 0.05f, 1f);
+        QTEVolumeEffect.SetTension(1f, 0.05f, 0.418f);
 
         GameManager.GameOver();
     }

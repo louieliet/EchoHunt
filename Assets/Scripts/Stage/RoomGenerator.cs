@@ -4,8 +4,7 @@ using UnityEngine;
 
 public abstract class RoomGenerator : MonoBehaviour
 {
-    protected List<Vector2Int> otherRooms = new();
-    protected List<Vector2Int> roomTiles = new();
+    protected RoomSchema schema;
 
     public abstract int Complexity { get; }
 
@@ -16,10 +15,12 @@ public abstract class RoomGenerator : MonoBehaviour
 
     protected abstract void Generate();
 
-    public abstract bool Evaluate(Vector2Int origin, List<Vector2Int> map, out Vector2Int[] consumed);
+    public abstract RoomSchema Evaluate(Vector2Int origin, HashSet<Vector2Int> freeSpots, HashSet<Vector2Int> map);
 
-    public void SetGenerator(Vector2Int[] rooms, List<Vector2Int> map)
+    public void SetGenerator(RoomSchema schema)
     {
+        this.schema = schema;
+        /*
         roomTiles.AddRange(rooms);
 
         HashSet<Vector2Int> filteredMap = new();    // Usamos hashset por que supuestamente es mas rapido
@@ -33,19 +34,7 @@ public abstract class RoomGenerator : MonoBehaviour
             }
         }
 
-        otherRooms = filteredMap.ToList();
-    }
-
-    protected List<Vector2Int> GetAdjacent(Vector2Int position)
-    {
-        List<Vector2Int> adjacent = new();
-
-        adjacent.Add(position + Vector2Int.up);
-        adjacent.Add(position + Vector2Int.down);
-        adjacent.Add(position + Vector2Int.left);
-        adjacent.Add(position + Vector2Int.right);
-
-        return adjacent;
+        otherRooms = filteredMap.ToList();*/
     }
 
     protected GameObject InstantiateDirectionalAsset(GameObject prefab, Vector2 pos, Vector2 dir)

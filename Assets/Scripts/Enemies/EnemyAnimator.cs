@@ -24,6 +24,11 @@ public class EnemyAnimator : MonoBehaviour
         animator.SetTrigger("Stun");
     }
 
+    public void Capture()
+    {
+        animator.SetTrigger("Capture");
+    }
+
     public void StateChange(ZombieState newState)
     {
         animator.SetBool("isWalking", newState == ZombieState.Alert);

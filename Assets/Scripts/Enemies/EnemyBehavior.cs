@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public enum ZombieState { Idle, Alert, Chase }
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyBehavior : MonoBehaviour
+public class EnemyBehavior : MonoBehaviour, ICapturable
 {
     public Transform target;
     public float attackDistance;
@@ -32,7 +32,7 @@ public class EnemyBehavior : MonoBehaviour
     private bool isZombieAwake;
 
     private float stunTimer;
-
+    
     private void Start()
     {
         isZombieAwake = false;
@@ -61,6 +61,8 @@ public class EnemyBehavior : MonoBehaviour
 
     private void ResetZombie()
     {
+        GameManager.CreatedZombie();
+
         transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
         isZombieAwake = true;
         agent.enabled = true;
@@ -196,5 +198,17 @@ public class EnemyBehavior : MonoBehaviour
 
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, hearingRange);
+    }
+
+    public void Capture(Vector3 pos)
+    {
+        isZombieAwake = false;
+        agent.enabled = false;
+
+        GameManager.CaptureZombie();
+
+        transform.position = pos;
+
+        _enemyAnimator.Capture();
     }
 }
