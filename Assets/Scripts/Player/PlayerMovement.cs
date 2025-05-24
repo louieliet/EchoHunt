@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField, Range(0, 100)] private float moveSpeed;
+    [SerializeField] private float groundDrag = 10f; // Increased drag for less sliding
+    [SerializeField] private float stopForceMultiplier = 7f; // Force multiplier when stopping
 
     [Header("Ground Check")]
     [SerializeField] private float playerHeight;
@@ -40,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
         GameManager.instance.OnQTEExit += SuccesfulQTEDefense;
 
-    
+
 
     }
 
@@ -92,13 +94,38 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         CalculateMovement();
+        ApplyDrag();
         SpeedControl();
+    }
+
+    private void ApplyDrag()
+    {
+        // Apply drag when player is on ground
+        rb.linearDamping = groundDrag;
+
+        // Quick stop when no input and moving slowly
+        if (movementInput.magnitude < 0.1f && rb.linearVelocity.magnitude < 0.5f)
+        {
+            // Hard stop when velocity is already low
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+        }
     }
 
     private void CalculateMovement()
     {
         Vector3 moveDirection = orientation.forward * movementInput.y + orientation.right * movementInput.x;
-        rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+
+        if (movementInput.magnitude > 0.1f)
+        {
+            // Apply force only when there's input
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        }
+        else if (rb.linearVelocity.magnitude > 0.1f)
+        {
+            // Apply counter force when trying to stop
+            Vector3 oppositeForce = -rb.linearVelocity.normalized * moveSpeed * stopForceMultiplier;
+            rb.AddForce(oppositeForce, ForceMode.Force);
+        }
     }
 
     private void SpeedControl()
