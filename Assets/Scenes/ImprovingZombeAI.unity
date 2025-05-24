@@ -771,7 +771,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: LabCount
-      value: 7
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: LevelScale
@@ -779,20 +779,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: NoiseCount
-      value: 55
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: StageDimensions.x
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: StageDimensions.y
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: RoomGenerators.Array.size
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
+      propertyPath: 'RoomGenerators.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2712234563325381650, guid: 22190e1fab9f319449628d2a0900d7a0, type: 3}
     - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: 'RoomGenerators.Array.data[1]'
       value: 

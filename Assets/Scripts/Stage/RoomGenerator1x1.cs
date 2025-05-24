@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class RoomGenerator1x1 : RoomGenerator
 {
-    public GameObject wallPrefab;
-    public GameObject doorPrefab;
+    public GameObject[] wallPrefab;
+    public GameObject[] doorPrefab;
 
     public override int Complexity { get; } = 1;
 
@@ -29,13 +29,13 @@ public class RoomGenerator1x1 : RoomGenerator
         foreach (Vector2Int other in schema.adjacentRooms)
         {
             Vector2 doorDirection = ((Vector2)(other - ThisRoom)).normalized;
-            InstantiateDirectionalAsset(doorPrefab, ThisRoom, doorDirection);
+            InstantiateDirectionalAsset(doorPrefab[Random.Range(0, doorPrefab.Length)], ThisRoom, doorDirection);
         }
 
         foreach(Vector2Int wall in wallList)
         {
             Vector2 doorDirection = ((Vector2)(wall - ThisRoom)).normalized;
-            InstantiateDirectionalAsset(wallPrefab, ThisRoom, doorDirection);
+            InstantiateDirectionalAsset(wallPrefab[Random.Range(0, wallPrefab.Length)], ThisRoom, doorDirection);
         }
     }
 }
