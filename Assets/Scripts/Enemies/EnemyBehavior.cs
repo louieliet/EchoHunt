@@ -64,6 +64,11 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
     private bool canHearPlayerCached;
     private float lastDetectionUpdate;
 
+    // Variables para idle animado
+    private float idleWalkTimer = 0f;
+    private float nextIdleWalkTime = 0f;
+    private bool idleFakeWalk = false;
+
     private void Start()
     {
         isZombieAwake = false;
@@ -164,10 +169,42 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
     private void UpdateMovementAnimation()
     {
         if (_enemyAnimator == null || agent == null) return;
-        // Solo activa isWalking si el zombie realmente se está moviendo y no está corriendo
+
         bool isMoving = agent.enabled && agent.velocity.magnitude > 0.1f;
         bool isChasing = agent.enabled && currentState == ZombieState.Chase;
-        _enemyAnimator.SetWalking(isMoving && !isChasing);
+
+        // Si está en Idle, activa isWalking de forma intermitente para simular pasos
+        if (currentState == ZombieState.Idle)
+        {
+            idleWalkTimer += Time.deltaTime;
+            if (idleFakeWalk)
+            {
+                // Simula caminar por 1-2 segundos
+                if (idleWalkTimer > UnityEngine.Random.Range(1f, 2f))
+                {
+                    idleFakeWalk = false;
+                    idleWalkTimer = 0f;
+                    nextIdleWalkTime = UnityEngine.Random.Range(2f, 5f); // Espera antes de volver a caminar
+                }
+            }
+            else
+            {
+                // Espera un tiempo antes de volver a simular pasos
+                if (idleWalkTimer > nextIdleWalkTime)
+                {
+                    idleFakeWalk = true;
+                    idleWalkTimer = 0f;
+                }
+            }
+            _enemyAnimator.SetWalking(idleFakeWalk);
+        }
+        else
+        {
+            // Lógica normal para otros estados
+            idleFakeWalk = false;
+            idleWalkTimer = 0f;
+            _enemyAnimator.SetWalking(isMoving && !isChasing);
+        }
     }
 
     private IEnumerator DetectionCoroutine()
