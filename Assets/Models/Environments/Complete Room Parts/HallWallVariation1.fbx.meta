@@ -9,6 +9,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Billboard_MAT
     second: {fileID: 2100000, guid: 411a7f457ecf3b74ca925faf5896f074, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HallWall_MAT
+    second: {fileID: 2100000, guid: 1a833e5ccb1d4dc40a25bc89cf0d6274, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

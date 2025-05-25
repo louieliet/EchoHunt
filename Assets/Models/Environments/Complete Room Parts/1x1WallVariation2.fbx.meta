@@ -9,6 +9,26 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Billboard_MAT
     second: {fileID: 2100000, guid: 411a7f457ecf3b74ca925faf5896f074, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DynamoGlow_MAT
+    second: {fileID: 2100000, guid: cec0c51233c1e6843a2b776083cb56d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DynamoMatte_MAT
+    second: {fileID: 2100000, guid: 5fce4341455f3114ab8e2c15c5ad9024, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dynamo_Glass
+    second: {fileID: 2100000, guid: 0cc9fddd6f1a4d646ac86da861c81c63, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Room1x1Wall_MAT
+    second: {fileID: 2100000, guid: f3dcbcc8890f4d74d96a641ee4f467f0, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -7,6 +7,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: LamparaPelota_MAT
+    second: {fileID: 2100000, guid: bd00cc9634381b74e9138af3e386ab3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Room1x1Ceiling_MAT
+    second: {fileID: 2100000, guid: 8a545cf49ac9fc24bb69537d16ad8657, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Suelo_MAT
     second: {fileID: 2100000, guid: d86a840deb3ced44699db3cd47782a05, type: 2}
   materials:

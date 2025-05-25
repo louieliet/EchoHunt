@@ -9,6 +9,26 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Billboard_MAT
     second: {fileID: 2100000, guid: 1008652cb55bbc14ab53385d82c50d2f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DoorBottomHalf_MAT
+    second: {fileID: 2100000, guid: 15c68de8f3b8f49458d8c5e2c0fd489d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DoorTopHalf_MAT
+    second: {fileID: 2100000, guid: be3fdb926aa27cc41937a87531f93716, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HallDoorFrame_MAT
+    second: {fileID: 2100000, guid: e9ab317ee1b80b9458193d42429e9128, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HallDoor_MAT
+    second: {fileID: 2100000, guid: 3f42f5acb53c7334797786fbca028c20, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

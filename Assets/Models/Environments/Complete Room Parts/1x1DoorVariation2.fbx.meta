@@ -12,8 +12,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: DoorBottomHalf_MAT
+    second: {fileID: 2100000, guid: 15c68de8f3b8f49458d8c5e2c0fd489d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: DoorFrame_MAT
     second: {fileID: 2100000, guid: 7f8efd7d2d8f3b743b7b5bc65b4cb4ac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DoorTopHalf_MAT
+    second: {fileID: 2100000, guid: be3fdb926aa27cc41937a87531f93716, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -24,6 +34,21 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Room1x1Door_MAT
     second: {fileID: 2100000, guid: a094754b18381594ab44842e39862a38, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: TelefonoBotones_MAT
+    second: {fileID: 2100000, guid: 992a4546679f4924ba7e0271dcfe75e7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: TelefonoCaja_MAT
+    second: {fileID: 2100000, guid: 0581c12c831c31e4aa7c436c0811c9e4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Telefono_MAT
+    second: {fileID: 2100000, guid: 9341588433b31ef458e57932c036070b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
