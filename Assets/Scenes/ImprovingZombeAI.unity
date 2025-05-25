@@ -627,18 +627,6 @@ PrefabInstance:
       value: Superior Capture Capsule
       objectReference: {fileID: 0}
     - target: {fileID: 6884195612443580091, guid: bee919effaaa4dd4a9d2464726407e56, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6884195612443580091, guid: bee919effaaa4dd4a9d2464726407e56, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6884195612443580091, guid: bee919effaaa4dd4a9d2464726407e56, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6884195612443580091, guid: bee919effaaa4dd4a9d2464726407e56, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}

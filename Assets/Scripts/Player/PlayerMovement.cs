@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(AudioSource))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
@@ -28,10 +29,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool showNoiseGizmo = true;
     [SerializeField] private Color noiseGizmoColor = Color.cyan;
 
+    [Header("Footstep Sound")]
+    public AudioClip footstepClip;
+    public float footstepInterval = 0.4f;
+    private float footstepCooldown = 0f;
+    private AudioSource audioSource;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
 
         PlayerController.controller.Player.Move.performed += ctx => OnMovement(ctx.ReadValue<Vector2>());
         PlayerController.controller.Player.Move.canceled += ctx => OnMovement(Vector2.zero); // Reinicia el movimiento cuando no hay entrada
@@ -41,9 +51,6 @@ public class PlayerMovement : MonoBehaviour
         StageBuilder.instance.OnLevelBuild += ResetPlayer;
 
         GameManager.instance.OnQTEExit += SuccesfulQTEDefense;
-
-
-
     }
 
     void OnDestroy()
@@ -66,7 +73,6 @@ public class PlayerMovement : MonoBehaviour
     void ResetPlayer()
     {
         transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
-
     }
 
     void OnMovement(Vector2 input)
@@ -86,8 +92,9 @@ public class PlayerMovement : MonoBehaviour
         {
             currentNoiseRadius = 0;
         }
-    }
 
+        PlayFootstepSound();
+    }
 
     public float GetCurrentNoiseRadius() => currentNoiseRadius;
 
@@ -147,6 +154,18 @@ public class PlayerMovement : MonoBehaviour
         {
             Gizmos.color = noiseGizmoColor;
             Gizmos.DrawWireSphere(transform.position, currentNoiseRadius);
+        }
+    }
+
+    private void PlayFootstepSound()
+    {
+        footstepCooldown -= Time.deltaTime;
+        // Considera movimiento en XZ (horizontal)
+        bool isMoving = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude > 0.1f;
+        if (isMoving && footstepClip != null && footstepCooldown <= 0f)
+        {
+            audioSource.PlayOneShot(footstepClip);
+            footstepCooldown = footstepInterval;
         }
     }
 }
