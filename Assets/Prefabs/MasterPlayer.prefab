@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSensitivity: 0.5
-  controllerSensitivity: 50
+  controllerSensitivity: 1
   orientation: {fileID: 7185238294347034421}
 --- !u!1 &1470909967858625478
 GameObject:
@@ -277,10 +277,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 7
   groundDrag: 5
+  stopForceMultiplier: 7
   playerHeight: 2
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
   orientation: {fileID: 7185238294347034421}
   noiseRadius: 5
   sprintNoiseMultiplier: 1.5

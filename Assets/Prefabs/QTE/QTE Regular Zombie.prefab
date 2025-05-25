@@ -2780,7 +2780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxDelayWait: 0.1
-  ReactionWindowOpen: 0.2
+  ReactionWindowOpen: 0.4
   QTETimeScale: 0.05
   sparkRenderer: {fileID: 6848361122682768845}
   zombieAnimator: {fileID: 4346094822100286983}
