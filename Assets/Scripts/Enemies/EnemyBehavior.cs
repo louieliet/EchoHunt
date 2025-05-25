@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public enum ZombieState { Idle, Alert, Investigate, Chase, Searching }
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(AudioSource))]
 public class EnemyBehavior : MonoBehaviour, ICapturable
 {
     public Transform target;
@@ -43,6 +44,13 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
     [Header("Hearing")]
     [SerializeField] protected float hearingRange = 8f;
     [SerializeField] protected LayerMask soundObstacleLayers;
+
+    [Header("Zombie Sounds")]
+    public AudioClip[] idleSounds;
+    public AudioClip[] chaseSounds;
+    public float maxAudioDistance = 20f; // Volumen máximo cuando el jugador está cerca
+    private AudioSource audioSource;
+    private float soundCooldown = 0f;
 
     protected PlayerMovement _playerMovement;
     protected EnemyAnimator _enemyAnimator;
@@ -85,6 +93,11 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
 
         StageBuilder.instance.OnLevelBuild += ResetZombie;
         GameManager.instance.OnQTEExit += Stun;
+
+        // AudioSource setup
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     void OnDestroy()
@@ -164,6 +177,12 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
 
         // Actualiza animación según movimiento real
         UpdateMovementAnimation();
+
+        // Reproduce sonidos según el estado
+        PlayStateSound();
+
+        // Ajusta el volumen del audio según la distancia al jugador
+        UpdateAudioVolume();
     }
 
     private void UpdateMovementAnimation()
@@ -566,5 +585,46 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
             investigationTarget = playerPosition;
             ChangeState(ZombieState.Investigate);
         }
+    }
+
+    private void PlayStateSound()
+    {
+        soundCooldown -= Time.deltaTime;
+        if (soundCooldown > 0f) return;
+
+        if (currentState == ZombieState.Idle && idleSounds != null && idleSounds.Length > 0)
+        {
+            audioSource.PlayOneShot(idleSounds[UnityEngine.Random.Range(0, idleSounds.Length)]);
+            soundCooldown = UnityEngine.Random.Range(3f, 7f); // Espera entre sonidos
+        }
+        else if ((currentState == ZombieState.Chase || currentState == ZombieState.Alert) && chaseSounds != null && chaseSounds.Length > 0)
+        {
+            AudioClip chosenClip = chaseSounds[UnityEngine.Random.Range(0, chaseSounds.Length)];
+            if (audioSource.clip != chosenClip || !audioSource.isPlaying)
+            {
+                audioSource.clip = chosenClip;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+            soundCooldown = chosenClip.length; // Espera a que termine el clip antes de cambiar
+        }
+        else
+        {
+            // Si no está en persecución, detén el loop de ataque si estaba activo
+            if (audioSource.loop && (audioSource.clip != null && chaseSounds != null && System.Array.IndexOf(chaseSounds, audioSource.clip) != -1))
+            {
+                audioSource.loop = false;
+                audioSource.Stop();
+                audioSource.clip = null;
+            }
+        }
+    }
+
+    private void UpdateAudioVolume()
+    {
+        if (audioSource == null || target == null) return;
+        float distance = Vector3.Distance(transform.position, target.position);
+        float volume = 1f - Mathf.Clamp01(distance / maxAudioDistance);
+        audioSource.volume = volume;
     }
 }
