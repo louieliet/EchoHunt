@@ -16,60 +16,60 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
 
     public Transform EyesReference;
 
-    private NavMeshAgent agent;
-    private float m_Distance;
-    public ZombieState currentState { get; private set; }
+    protected NavMeshAgent agent;
+    protected float m_Distance;
+    public ZombieState currentState { get; protected set; }
 
     [Header("Events")]
     public UnityEvent OnPlayerSpotted;
     public UnityEvent OnPlayerLost;
 
     [Header("AI Configuration")]
-    [SerializeField] private float detectionUpdateRate = 0.2f;
-    [SerializeField] private float stunDuration = 2f;
-    [SerializeField] private float investigationTime = 5f;
-    [SerializeField] private float searchTime = 8f;
-    [SerializeField] private float rotationSpeed = 2f;
-    [SerializeField] private float alertDecayTime = 3f;
+    [SerializeField] protected float detectionUpdateRate = 0.2f;
+    [SerializeField] protected float stunDuration = 2f;
+    [SerializeField] protected float investigationTime = 5f;
+    [SerializeField] protected float searchTime = 8f;
+    [SerializeField] protected float rotationSpeed = 2f;
+    [SerializeField] protected float alertDecayTime = 3f;
 
     [Header("Memory System")]
-    [SerializeField] private float memoryDuration = 10f;
-    [SerializeField] private float predictionStrength = 0.5f;
+    [SerializeField] protected float memoryDuration = 10f;
+    [SerializeField] protected float predictionStrength = 0.5f;
 
     [Header("Communication")]
-    [SerializeField] private float communicationRange = 15f;
-    [SerializeField] private LayerMask enemyLayerMask;
+    [SerializeField] protected float communicationRange = 15f;
+    [SerializeField] protected LayerMask enemyLayerMask;
 
     [Header("Hearing")]
-    [SerializeField] private float hearingRange = 8f;
-    [SerializeField] private LayerMask soundObstacleLayers;
+    [SerializeField] protected float hearingRange = 8f;
+    [SerializeField] protected LayerMask soundObstacleLayers;
 
-    private PlayerMovement _playerMovement;
-    private EnemyAnimator _enemyAnimator;
-    private bool isZombieAwake;
+    protected PlayerMovement _playerMovement;
+    protected EnemyAnimator _enemyAnimator;
+    protected bool isZombieAwake;
 
-    private float stunTimer;
+    protected float stunTimer;
 
     // Memory and AI enhancement variables
-    private Vector3 lastKnownPlayerPosition;
-    private float lastPlayerSeenTime;
-    private float alertLevel; // 0-1, increases with detection
-    private Vector3 investigationTarget;
-    private float stateTimer;
-    private bool hasMemoryOfPlayer;
+    protected Vector3 lastKnownPlayerPosition;
+    protected float lastPlayerSeenTime;
+    protected float alertLevel; // 0-1, increases with detection
+    protected Vector3 investigationTarget;
+    protected float stateTimer;
+    protected bool hasMemoryOfPlayer;
 
     // Optimization variables
-    private Coroutine detectionCoroutine;
-    private bool canSeePlayerCached;
-    private bool canHearPlayerCached;
-    private float lastDetectionUpdate;
+    protected Coroutine detectionCoroutine;
+    protected bool canSeePlayerCached;
+    protected bool canHearPlayerCached;
+    protected float lastDetectionUpdate;
 
     // Variables para idle animado
     private float idleWalkTimer = 0f;
     private float nextIdleWalkTime = 0f;
     private bool idleFakeWalk = false;
 
-    private void Start()
+    protected virtual void Start()
     {
         isZombieAwake = false;
         agent = GetComponent<NavMeshAgent>();
@@ -216,7 +216,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private void UpdateDetection()
+    protected virtual void UpdateDetection()
     {
         m_Distance = Vector3.Distance(target.position, transform.position);
         canSeePlayerCached = CanSeePlayer();
@@ -230,7 +230,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private void UpdatePlayerMemory()
+    protected virtual void UpdatePlayerMemory()
     {
         lastKnownPlayerPosition = target.position;
         lastPlayerSeenTime = Time.time;
@@ -264,7 +264,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private bool CanSeePlayer()
+    protected virtual bool CanSeePlayer()
     {
         if (m_Distance > visionRange)
             return false;
@@ -281,7 +281,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         return false;
     }
 
-    private bool CanHearPlayer()
+    protected virtual bool CanHearPlayer()
     {
         if (!_playerMovement.IsMakingNoise) return false;
 
@@ -303,7 +303,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
     }
 
     // Método para hacer rotar el zombie hacia una posición de forma suave
-    private void RotateTowards(Vector3 position)
+    protected virtual void RotateTowards(Vector3 position)
     {
         Vector3 direction = (position - transform.position).normalized;
         if (direction != Vector3.zero)
@@ -373,7 +373,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         _enemyAnimator.Capture();
     }
 
-    private void HandleIdleState()
+    protected virtual void HandleIdleState()
     {
         _enemyAnimator.StateChange(currentState);
         agent.isStopped = true;
@@ -396,7 +396,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private void HandleAlertState()
+    protected virtual void HandleAlertState()
     {
         _enemyAnimator.StateChange(currentState);
 
@@ -418,7 +418,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private void HandleInvestigateState()
+    protected virtual void HandleInvestigateState()
     {
         _enemyAnimator.StateChange(currentState);
 
@@ -511,7 +511,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private void ChangeState(ZombieState newState)
+    protected virtual void ChangeState(ZombieState newState)
     {
         if (currentState != newState)
         {
