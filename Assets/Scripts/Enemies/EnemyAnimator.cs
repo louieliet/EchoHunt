@@ -31,7 +31,17 @@ public class EnemyAnimator : MonoBehaviour
 
     public void StateChange(ZombieState newState)
     {
-        animator.SetBool("isWalking", newState == ZombieState.Alert);
-        animator.SetBool("isChasing", newState == ZombieState.Chase);
+        // El zombie camina en Alert e Investigate
+        bool walking = newState == ZombieState.Alert || newState == ZombieState.Investigate;
+        // El zombie corre en Chase
+        bool chasing = newState == ZombieState.Chase;
+
+        animator.SetBool("isWalking", walking);
+        animator.SetBool("isChasing", chasing);
+    }
+
+    public void SetWalking(bool walking)
+    {
+        animator.SetBool("isWalking", walking);
     }
 }

@@ -156,6 +156,18 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
 
         // State machine logic
         HandleStateMachine();
+
+        // Actualiza animación según movimiento real
+        UpdateMovementAnimation();
+    }
+
+    private void UpdateMovementAnimation()
+    {
+        if (_enemyAnimator == null || agent == null) return;
+        // Solo activa isWalking si el zombie realmente se está moviendo y no está corriendo
+        bool isMoving = agent.enabled && agent.velocity.magnitude > 0.1f;
+        bool isChasing = agent.enabled && currentState == ZombieState.Chase;
+        _enemyAnimator.SetWalking(isMoving && !isChasing);
     }
 
     private IEnumerator DetectionCoroutine()
