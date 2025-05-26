@@ -434,17 +434,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3611521341225122547, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
-      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
       propertyPath: m_Name
       value: Zombie1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7780812079479146096, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
-      propertyPath: m_Speed
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -499,17 +491,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3611521341225122547, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
-      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
       propertyPath: m_Name
       value: Zombie1 (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7780812079479146096, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
-      propertyPath: m_Speed
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -700,17 +684,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3611521341225122547, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
-      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4493914613880827488, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
       propertyPath: m_Name
       value: Zombie1 (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7780812079479146096, guid: 6dc4cf4496348884d8ee27743ae38562, type: 3}
-      propertyPath: m_Speed
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -872,10 +848,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 908750565159028662, guid: a84bc2cee07334432a8b3f8cdb7c6380, type: 3}
-      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4580609869555253695, guid: a84bc2cee07334432a8b3f8cdb7c6380, type: 3}
       propertyPath: m_Name
       value: SuperiorZombie
@@ -919,10 +891,6 @@ PrefabInstance:
     - target: {fileID: 6591619461875431211, guid: a84bc2cee07334432a8b3f8cdb7c6380, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9066293595124976378, guid: a84bc2cee07334432a8b3f8cdb7c6380, type: 3}
-      propertyPath: attackDistance
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
