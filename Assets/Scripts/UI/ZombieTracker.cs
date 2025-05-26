@@ -15,6 +15,7 @@ public class ZombieTracker : MonoBehaviour
         GameManager.instance.OnTotalZombieAmountChange += UpdateTotalZombieCount;
     }
 
+
     void OnDestroy()
     {
         if (GameManager.instance == null) return;
@@ -25,9 +26,21 @@ public class ZombieTracker : MonoBehaviour
 
     void UpdateTotalZombieCount()
     {
-        Image thing = Instantiate(SkullPrefab);
-        thing.transform.SetParent(transform);
-        thing.color = Color.red;
+        // Limpia todos los hijos antes de crear los nuevos
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Siempre crea 3 skulls (o el número que quieras)
+        for (int i = 0; i < 3; i++)
+        {
+            Image thing = Instantiate(SkullPrefab);
+            thing.transform.SetParent(transform);
+            thing.color = Color.red;
+        }
+
+        ZombieCounter = 0; // Reinicia el contador de capturados
     }
 
     void UpdateCapturedZombieCount()
