@@ -31,4 +31,15 @@ public class ProximityMusic : MonoBehaviour
         float volume = 1f - Mathf.Clamp01(distance / maxAudioDistance);
         audioSource.volume = volume;
     }
+
+    void Awake()
+    {
+        // Si ya existe otro ProximityMusic, destrúyete
+        if (FindObjectsOfType<ProximityMusic>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+    }
 }
