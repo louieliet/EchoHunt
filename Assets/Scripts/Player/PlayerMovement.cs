@@ -151,13 +151,19 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isGrounded) return;
 
+        // Obtener la dirección de movimiento relativa a la orientación
         Vector3 moveDirection = orientation.forward * movementInput.y + orientation.right * movementInput.x;
+
+        // Aplanar el vector de movimiento para que solo use X y Z
+        moveDirection.y = 0;
+        moveDirection = moveDirection.normalized;
+
         float currentSpeed = moveSpeed * (isSprinting ? sprintMultiplier : 1f);
 
         if (movementInput.magnitude > 0.1f)
         {
             // Apply force only when there's input
-            rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
+            rb.AddForce(moveDirection * currentSpeed * 10f, ForceMode.Force);
         }
         else if (rb.linearVelocity.magnitude > 0.1f)
         {
