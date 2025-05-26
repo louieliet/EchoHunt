@@ -17,11 +17,11 @@ public class RoomGenerator2x2 : RoomGenerator
             // Top-Left
             new Vector2Int[] { Vector2Int.zero, Vector2Int.up, Vector2Int.left, Vector2Int.up + Vector2Int.left },
             // Top-Right
-            new Vector2Int[] { Vector2Int.zero, Vector2Int.up, Vector2Int.right, Vector2Int.up + Vector2Int.right },
+            // new Vector2Int[] { Vector2Int.zero, Vector2Int.up, Vector2Int.right, Vector2Int.up + Vector2Int.right },
             // Bottom-Left
-            new Vector2Int[] { Vector2Int.zero, Vector2Int.down, Vector2Int.left, Vector2Int.down + Vector2Int.left },
+            // new Vector2Int[] { Vector2Int.zero, Vector2Int.down, Vector2Int.left, Vector2Int.down + Vector2Int.left },
             // Bottom-Right
-            new Vector2Int[] { Vector2Int.zero, Vector2Int.down, Vector2Int.right, Vector2Int.down + Vector2Int.right }
+            // new Vector2Int[] { Vector2Int.zero, Vector2Int.down, Vector2Int.right, Vector2Int.down + Vector2Int.right }
         };
 
         // Intentar cada uno de los esquemas con los offsets

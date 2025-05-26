@@ -37,7 +37,7 @@ public class RoomGenerator1xN : RoomGenerator
             }
         }
 
-        if(BestDirectionLength <= 1)
+        if(BestDirectionLength <= 2)
             return new RoomSchema(origin);
 
         Vector2Int[] tiles = new Vector2Int[BestDirectionLength + 1];

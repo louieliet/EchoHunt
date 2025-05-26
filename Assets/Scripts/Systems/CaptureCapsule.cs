@@ -9,12 +9,6 @@ public class CaptureCapsule : MonoBehaviour
 
     private void Start()
     {
-        StageBuilder.instance.OnLevelBuild += ResetCapsule;
-    }
-
-    private void ResetCapsule()
-    {
-        transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
         Used = false;
     }
 

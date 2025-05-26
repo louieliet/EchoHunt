@@ -10,10 +10,13 @@ public class StageBuilder : MonoBehaviour
 
     public RoomGenerator[] RoomGenerators;
 
+    public RoomGenerator LabGenerator;
+
     public static StageBuilder instance;
 
     [SerializeField] private Vector2Int StageDimensions = new Vector2Int(10, 10);
-    [SerializeField] private int LabCount = 5;
+    [SerializeField] private int LabCount = 2;
+    [SerializeField] private int CornerCount = 7;
     [SerializeField] private int NoiseCount = 15;
     [SerializeField] private float LevelScale = 3f;
 
@@ -40,30 +43,91 @@ public class StageBuilder : MonoBehaviour
 
     private void GenerateStageBlob()
     {
-        List<Vector2Int> BaseRooms = new();
+        List<Vector2Int> CornerRooms = new();
         List<Vector2Int> Walls = new();
 
-        // Para esta version de prueba, generar áreas al azar
+        HashSet<Vector2Int> LabGrid = new();
+
+        // Fill a grid with valid spaces for lab colocation
+        for (int x = 0; x < StageDimensions.x; x++)
+        {
+            for (int y = 0; y < StageDimensions.y; y++)
+            {
+                LabGrid.Add(new Vector2Int(x, y));
+            }
+        }
+
+        HashSet<Vector2Int> LabSpaces = new(LabGrid);
+
+        // Colocaremos generadores de laboratorios
         for (int i = 0; i < LabCount; i++)
         {
+            RoomSchema sch = null;
+            int iter = 0;
+            do
+            {
+                // Obtener posicion aleatoria dentro del grid
+                Vector2Int current = new Vector2Int(Random.Range(0, StageDimensions.x), Random.Range(0, StageDimensions.y));
+                sch = LabGenerator.Evaluate(current, LabSpaces, LabGrid);
+                iter++;
+            }
+            while (!sch.isValidSchema && iter < 10);
+
+            if (sch.isValidSchema)
+            {
+                LabSpaces.ExceptWith(sch.roomTiles);
+                StageSchema.Add(sch);
+
+                CornerRooms.Add(sch.origin);
+                StageBlob.UnionWith(sch.roomTiles);
+            }            
+        }
+
+        // Añadir generadores de conexiones
+        for(int i = 0; i < CornerCount; i++)
+        {
             Vector2Int current = new Vector2Int(Random.Range(0, StageDimensions.x), Random.Range(0, StageDimensions.y));
-            BaseRooms.Add(current);
+
+            CornerRooms.Add(current);
             StageBlob.Add(current);
         }
 
-        // Para esta version de prueba, generar paredes al azar
+        // Gusano
+        Vector2Int wormGenerator = new Vector2Int(Random.Range(0, StageDimensions.x), Random.Range(0, StageDimensions.y));  // Posicion del gusano
+        Vector2Int[] wormDirections = { Vector2Int.up, Vector2Int.down, Vector2Int.right, Vector2Int.left };    // Movimiento del gusano
+
+        // Checar adyacencias
+        Vector2Int[] noiseContiguity = { Vector2Int.up, Vector2Int.down, Vector2Int.right, Vector2Int.left, Vector2Int.up + Vector2Int.right, Vector2Int.up + Vector2Int.left, Vector2Int.down + Vector2Int.right, Vector2Int.down + Vector2Int.left };
+
+        // Generar gusano que distorsiona puertas
         for (int i = 0; i < NoiseCount; i++)
         {
-            Vector2Int current = new Vector2Int(Random.Range(0, StageDimensions.x), Random.Range(0, StageDimensions.y));
-            Walls.Add(current);
+            // Checar si hay adyacencias en el ruido
+            int adjacentNoise = 0;
+            foreach(Vector2Int dir in noiseContiguity)
+            {
+                if (Walls.Contains(wormGenerator + dir))
+                    adjacentNoise++;
+            }
+
+            // Si hay pocas adyacencias, anadir pared
+            if(adjacentNoise <= 1)
+                Walls.Add(wormGenerator);
+
+            // Mover gusano
+            wormGenerator += wormDirections[Random.Range(0, wormDirections.Length)];
+
+            // Si el gusano se sale del mapa, resetear posicion
+            if(wormGenerator.x < 0 || wormGenerator.x >= StageDimensions.x || wormGenerator.y < 0 || wormGenerator.y >= StageDimensions.y)
+                wormGenerator = new Vector2Int(Random.Range(0, StageDimensions.x), Random.Range(0, StageDimensions.y));
         }
 
         // Connect all lab rooms among themselves
-        for (int i = 0; i < BaseRooms.Count; i++)
+        for (int i = 0; i < CornerRooms.Count; i++)
         {
-            for (int j = i + 1; j < BaseRooms.Count; j++)
+            for (int j = i + 1; j < CornerRooms.Count; j++)
             {
-                List<Vector2Int> route = Pathfinding.FindRoute(Walls, BaseRooms[i], BaseRooms[j]);
+                List<Vector2Int> route = Pathfinding.FindRoute(Walls, CornerRooms[i], CornerRooms[j]);
                 if (route == null)   // Si la conexion fue creada, añadir todos los cuartos al blob
                 {
                     continue;
@@ -76,11 +140,23 @@ public class StageBuilder : MonoBehaviour
                 
             }
         }
+
+        // Actualizar los cuartos de laboratorio de acuerdo al nuevo StageBlob
+        foreach(RoomSchema room in StageSchema)
+        {
+            room.AutoGenerateAdjacent(StageBlob);
+        }
     }
 
     private void GenerateStageSchema()
     {   
         HashSet<Vector2Int> PendingRooms = new(StageBlob);
+
+        // Quitar de los cuartos pendientes los cuartos que ya han sido usados por los laboratorios
+        foreach(RoomSchema prefabricated in StageSchema)
+        {
+            PendingRooms.ExceptWith(prefabricated.roomTiles);
+        }
 
         while(PendingRooms.Count > 0)
         {
