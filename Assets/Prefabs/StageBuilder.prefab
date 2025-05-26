@@ -50,7 +50,7 @@ MonoBehaviour:
   - {fileID: -4360409838094245969, guid: 6c021c07006c5d64db97ba7ae76e56b5, type: 3}
   - {fileID: 1902400443352087100, guid: 029c92a5e1fe16c4daf229b30dbb7005, type: 3}
   LabGenerator: {fileID: 10807663117761792, guid: c4ff3c721c517fa4bacd61814d6bd342, type: 3}
-  StageDimensions: {x: 10, y: 10}
+  StageDimensions: {x: 7, y: 7}
   LabCount: 3
   CornerCount: 6
   NoiseCount: 75
