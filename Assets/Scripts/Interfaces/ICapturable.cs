@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface ICapturable
 {
-    public void Capture(Vector3 newPosition);
+    public void Capture(Transform transform);
 }

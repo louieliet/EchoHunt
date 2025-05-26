@@ -643,34 +643,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
-      propertyPath: LabCount
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
-      propertyPath: NoiseCount
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
-      propertyPath: CornerCount
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
-      propertyPath: LabGenerator
-      value: 
-      objectReference: {fileID: 10807663117761792, guid: c4ff3c721c517fa4bacd61814d6bd342, type: 3}
-    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
-      propertyPath: StageDimensions.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
-      propertyPath: StageDimensions.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
-      propertyPath: RoomGenerators.Array.size
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 7482631257029719622, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: m_Name
       value: StageBuilder

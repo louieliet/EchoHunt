@@ -380,14 +380,15 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    public virtual void Capture(Vector3 pos)
+    public virtual void Capture(Transform pos)
     {
         isZombieAwake = false;
         agent.enabled = false;
 
         GameManager.CaptureZombie();
 
-        transform.position = pos;
+        transform.SetParent(pos);
+        transform.localPosition = Vector3.zero;
 
         _enemyAnimator.Capture();
     }

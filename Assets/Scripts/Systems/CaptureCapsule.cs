@@ -5,11 +5,18 @@ public class CaptureCapsule : MonoBehaviour
     public Transform CaptureTransform;
     public Light capsuleLight;
 
+    public AudioClip captureClip;
+
     private bool Used;
+    private Animator animator;
+    private AudioSource audioSource;
 
     private void Start()
     {
         Used = false;
+
+        audioSource = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -19,7 +26,9 @@ public class CaptureCapsule : MonoBehaviour
         if(other.TryGetComponent<ICapturable>(out ICapturable capturable))
         {
             Used = true;
-            capturable.Capture(CaptureTransform.position);
+            audioSource.PlayOneShot(captureClip);
+            animator.SetTrigger("Use");
+            capturable.Capture(CaptureTransform);
         }
     }
 

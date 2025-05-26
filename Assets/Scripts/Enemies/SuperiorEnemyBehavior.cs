@@ -101,12 +101,6 @@ public class SuperiorEnemyBehavior : EnemyBehavior
         }
     }
 
-    public override void Capture(Vector3 pos)
-    {
-        // El superior no puede ser capturado, así que no hace nada.
-        Debug.Log("¡El SuperiorEnemy no puede ser capturado!");
-    }
-
     protected override void ResetZombie()
     {
         // Igual que el base, pero sin GameManager.CreatedZombie();
