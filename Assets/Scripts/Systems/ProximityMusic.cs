@@ -35,11 +35,11 @@ public class ProximityMusic : MonoBehaviour
     void Awake()
     {
         // Si ya existe otro ProximityMusic, destrúyete
-        if (FindObjectsOfType<ProximityMusic>().Length > 1)
+        /*if (FindObjectsOfType<ProximityMusic>().Length > 1)
         {
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);*/
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -59,6 +60,8 @@ public class GameManager : MonoBehaviour
     {
         capturedZombies += 1;
         instance.OnZombieCapture?.Invoke();
+        if (capturedZombies == totalZombies)
+            SceneManager.LoadScene("Victory");
     }
 
     public static void GameOver()

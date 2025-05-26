@@ -36,6 +36,7 @@ public class QTECamera : MonoBehaviour
 
     private void SlowShaking()
     {
+        if (!gameObject.activeSelf) return;
         StopAllCoroutines();
         slowerTiming = 0.1f;
         StartCoroutine(ShakePart(false));

@@ -9,8 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/MenuScene.unity
     guid: c8daa3e6067ec49c1a3d742b91a81581
   - enabled: 1
-    path: Assets/Scenes/ImprovingZombeAI.unity
-    guid: 246b1131045e84b0e9f21406fc40dff5
+    path: Assets/Scenes/JaviZombieTest.unity
+    guid: 7ece243285637ca4e897b8c4406f0210
+  - enabled: 1
+    path: Assets/Scenes/Victory.unity
+    guid: 719c227f7603dfc4580360870f2aa75e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
