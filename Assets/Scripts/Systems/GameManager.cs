@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if(instance != null)
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
@@ -65,6 +65,12 @@ public class GameManager : MonoBehaviour
     {
         instance.OnGameOver?.Invoke();
         instance.GameOverMenu.SetTrigger("Fade In");
+        if (player != null)
+        {
+            var movement = player.GetComponent<PlayerMovement>();
+            if (movement != null)
+                movement.enabled = false;
+        }
     }
 
     public static void EnterQTE()

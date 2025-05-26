@@ -34,12 +34,18 @@ public class GameClock : MonoBehaviour
             {
                 minutes = 0;
                 hour++;
-                if (hour >= endHour)
-                {
-                    clockRunning = false;
-                    GameManager.GameOver(); // Llama a GameOver cuando llega a las 6 AM
-                }
             }
+
+            // Detener el reloj exactamente al llegar a las 6:00 AM
+            if (hour == endHour)
+            {
+                minutes = 0; // Opcional: fuerza a mostrar 6:00 AM exacto
+                UpdateClockText();
+                clockRunning = false;
+                GameManager.GameOver();
+                return; // Sale para que no siga sumando
+            }
+
             UpdateClockText();
         }
     }

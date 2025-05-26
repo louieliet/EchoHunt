@@ -515,10 +515,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockText: {fileID: 1284796039170280581}
-  startHour: 12
+  startHour: 0
   endHour: 6
   minutes: 0
   hour: 0
+  timeMultiplier: 10
 --- !u!1001 &5402873946581859262
 PrefabInstance:
   m_ObjectHideFlags: 0
