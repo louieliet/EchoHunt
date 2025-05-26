@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class SuperiorEnemyBehavior : EnemyBehavior
 {
@@ -98,5 +99,32 @@ public class SuperiorEnemyBehavior : EnemyBehavior
         {
             ChangeState(ZombieState.Idle);
         }
+    }
+
+    public override void Capture(Vector3 pos)
+    {
+        // El superior no puede ser capturado, así que no hace nada.
+        Debug.Log("¡El SuperiorEnemy no puede ser capturado!");
+    }
+
+    protected override void ResetZombie()
+    {
+        // Igual que el base, pero sin GameManager.CreatedZombie();
+        transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
+        isZombieAwake = true;
+        agent.enabled = true;
+        currentState = ZombieState.Idle;
+
+        // Reset AI state
+        alertLevel = 0f;
+        hasMemoryOfPlayer = false;
+        stateTimer = 0f;
+
+        // Start optimized detection system
+        if (detectionCoroutine != null)
+        {
+            StopCoroutine(detectionCoroutine);
+        }
+        detectionCoroutine = StartCoroutine(DetectionCoroutine());
     }
 }

@@ -124,7 +124,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private void ResetZombie()
+    protected virtual void ResetZombie()
     {
         GameManager.CreatedZombie();
 
@@ -226,7 +226,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    private IEnumerator DetectionCoroutine()
+    protected IEnumerator DetectionCoroutine()
     {
         while (isZombieAwake && stunTimer <= 0f)
         {
@@ -380,7 +380,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         }
     }
 
-    public void Capture(Vector3 pos)
+    public virtual void Capture(Vector3 pos)
     {
         isZombieAwake = false;
         agent.enabled = false;

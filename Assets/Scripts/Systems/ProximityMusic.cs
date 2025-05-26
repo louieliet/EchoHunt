@@ -23,8 +23,9 @@ public class ProximityMusic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var player = GameObject.FindGameObjectWithTag("Player").transform;
-        if (player == null) return;
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj == null) return;
+        Transform player = playerObj.transform;
 
         float distance = Vector3.Distance(transform.position, player.position);
         float volume = 1f - Mathf.Clamp01(distance / maxAudioDistance);
