@@ -8,6 +8,8 @@ public class GameClock : MonoBehaviour
     public int endHour = 6;   // 6 = 6 AM
     public int minutes = 0;
     public int hour = 0;
+    [Range(1, 100)]
+    public int timeMultiplier = 1; // Multiplicador de velocidad del tiempo
 
     private float timer = 0f;
     private bool clockRunning = true;
@@ -23,7 +25,7 @@ public class GameClock : MonoBehaviour
     {
         if (!clockRunning) return;
 
-        timer += Time.deltaTime;
+        timer += Time.deltaTime * timeMultiplier;
         if (timer >= 1f)
         {
             timer = 0f;
