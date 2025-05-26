@@ -1966,6 +1966,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fb6250b913bba4b2b8ac20d86c081876, type: 3}
   chaseSounds:
   - {fileID: 8300000, guid: 23e1d9067af114e2bbdd14bbddf2e9d2, type: 3}
+  maxAudioDistance: 20
+  parryClip: {fileID: 8300000, guid: 69a4932f186d3400eb22a994978d44ed, type: 3}
 --- !u!114 &3392034413602828551
 MonoBehaviour:
   m_ObjectHideFlags: 0

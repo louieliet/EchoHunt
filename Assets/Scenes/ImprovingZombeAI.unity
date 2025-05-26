@@ -912,6 +912,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5747698444817907116, guid: ca97ea1235ed87643896bab1541dbbf5, type: 3}
+      propertyPath: parryClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 69a4932f186d3400eb22a994978d44ed, type: 3}
     - target: {fileID: 7665586992725575443, guid: ca97ea1235ed87643896bab1541dbbf5, type: 3}
       propertyPath: m_Name
       value: QTE Regular Zombie
