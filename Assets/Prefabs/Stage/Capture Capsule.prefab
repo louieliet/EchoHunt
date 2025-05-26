@@ -305,7 +305,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.518
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -357,7 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa47af1e35bef47bb8dbe0bd49b25d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicClip: {fileID: 8300000, guid: b1e69b188e8654ba39765ba24e8a33bc, type: 3}
+  musicClip: {fileID: 8300000, guid: c856be17e5986c14fbbd4b4324f707ce, type: 3}
   maxAudioDistance: 20
   player: {fileID: 0}
 --- !u!1 &7183372261144368085
