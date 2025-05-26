@@ -17,6 +17,9 @@ public class GameOverMenu : MonoBehaviour
 
     public void Restart()
     {
+        var clock = FindObjectOfType<GameClock>();
+        if (clock != null)
+            clock.ResetClock();
         SceneManager.LoadScene(1);
     }
 }

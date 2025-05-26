@@ -56,4 +56,13 @@ public class GameClock : MonoBehaviour
         string ampm = (hour < 6) ? "AM" : "AM"; // Cambia a PM si tu juego lo requiere
         clockText.text = string.Format("{0:00}:{1:00} {2}", displayHour, minutes, ampm);
     }
+
+    public void ResetClock()
+    {
+        hour = startHour;
+        minutes = 0;
+        timer = 0f;
+        clockRunning = true;
+        UpdateClockText();
+    }
 }
