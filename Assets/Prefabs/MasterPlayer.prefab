@@ -287,6 +287,7 @@ MonoBehaviour:
   noiseGizmoColor: {r: 0, g: 1, b: 1, a: 1}
   footstepClip: {fileID: 8300000, guid: 23ad9ea22a6424f90a25c04c9b022af3, type: 3}
   footstepInterval: 0.4
+  parryClip: {fileID: 8300000, guid: 369ad1df658c5498e8dfc65605ea23e5, type: 3}
 --- !u!195 &7955945659375521871
 NavMeshAgent:
   m_ObjectHideFlags: 0

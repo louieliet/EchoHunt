@@ -35,6 +35,9 @@ public class PlayerMovement : MonoBehaviour
     private float footstepCooldown = 0f;
     private AudioSource audioSource;
 
+    [Header("Parry Sound")]
+    public AudioClip parryClip;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -62,6 +65,9 @@ public class PlayerMovement : MonoBehaviour
     void SuccesfulQTEDefense(Transform caller)
     {
         if (caller == null) return;
+
+        if (parryClip != null && audioSource != null)
+            audioSource.PlayOneShot(parryClip, 2.5f);
 
         Vector3 newCallerPosition = caller.position;
         newCallerPosition.y = transform.position.y;
