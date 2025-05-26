@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class SuperiorEnemyBehavior : EnemyBehavior
 {
@@ -22,6 +23,11 @@ public class SuperiorEnemyBehavior : EnemyBehavior
         visionAngle = 0f;
     }
 
+    public override void Capture(Transform pos)
+    {
+        return;
+    }
+
     protected override bool CanSeePlayer()
     {
         // Siempre es ciego
@@ -38,7 +44,7 @@ public class SuperiorEnemyBehavior : EnemyBehavior
         {
             lastHeardSoundPosition = target.position;
             float distance = Vector3.Distance(transform.position, lastHeardSoundPosition);
-            shouldRunToSound = distance < runThresholdDistance;
+            shouldRunToSound = distance > runThresholdDistance;
             UpdatePlayerMemory();
         }
     }
@@ -86,11 +92,10 @@ public class SuperiorEnemyBehavior : EnemyBehavior
         agent.isStopped = false;
         agent.destination = investigationTarget;
 
-        float distanceToTarget = Vector3.Distance(transform.position, investigationTarget);
         float distanceToPlayer = Vector3.Distance(transform.position, target.position);
 
         // Ataca si está cerca del punto de sonido o cerca del jugador
-        if (distanceToTarget < attackDistance || distanceToPlayer < attackDistance)
+        if (distanceToPlayer < attackDistance)
         {
             agent.isStopped = true;
             RegularZombieQTE.EnterRegularZombieQTE(transform); // Usa el transform del Superior
@@ -104,7 +109,7 @@ public class SuperiorEnemyBehavior : EnemyBehavior
     protected override void ResetZombie()
     {
         // Igual que el base, pero sin GameManager.CreatedZombie();
-        transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
+        transform.position = StageBuilder.instance.GetRandomMazePosition();
         isZombieAwake = true;
         agent.enabled = true;
         currentState = ZombieState.Idle;
@@ -120,5 +125,15 @@ public class SuperiorEnemyBehavior : EnemyBehavior
             StopCoroutine(detectionCoroutine);
         }
         detectionCoroutine = StartCoroutine(DetectionCoroutine());
+    }
+
+    public override void Hear(Vector3 position)
+    {
+        investigationTarget = position;
+        lastHeardSoundPosition = position;
+        float distance = Vector3.Distance(transform.position, lastHeardSoundPosition);
+        shouldRunToSound = distance > runThresholdDistance;
+
+        ChangeState(ZombieState.Investigate);
     }
 }

@@ -23,7 +23,8 @@ public class StageBuilder : MonoBehaviour
     private HashSet<Vector2Int> StageBlob = new(); // El área generada a partir de la cual generaremos cuartos.
     private HashSet<RoomSchema> StageSchema = new();   // El lugar donde generaremos y guardaremos nuestros cuartos generados
 
-    private List<Vector2Int> RandomPositions;
+    private List<Vector2Int> RandomSafePositions = new();
+    private List<Vector2Int> RandomMazePositions = new();
 
     private NavMeshSurface navMeshSurface;
 
@@ -144,6 +145,8 @@ public class StageBuilder : MonoBehaviour
         // Actualizar los cuartos de laboratorio de acuerdo al nuevo StageBlob
         foreach(RoomSchema room in StageSchema)
         {
+            RandomSafePositions.AddRange(room.roomTiles);
+            RandomSafePositions.Remove(room.origin);
             room.AutoGenerateAdjacent(StageBlob);
         }
     }
@@ -168,6 +171,7 @@ public class StageBuilder : MonoBehaviour
                 {
                     StageSchema.Add(testSchema);
                     PendingRooms.ExceptWith(testSchema.roomTiles);  // Delete consumed tiles
+                    RandomMazePositions.AddRange(testSchema.roomTiles);
 
                     break;
                 }
@@ -207,13 +211,24 @@ public class StageBuilder : MonoBehaviour
         StartCoroutine(ScaleCoroutine());
     }
 
-    public Vector3 GetRandomPositionAtMaze()
+    public Vector3 GetRandomMazePosition()
     {
-        int Index = Random.Range(0, RandomPositions.Count);
-        Vector2Int RandomSpot = RandomPositions[Index];
+        int Index = Random.Range(0, RandomMazePositions.Count);
+        Vector2Int RandomSpot = RandomMazePositions[Index];
         Vector3 RealPosition = new Vector3(RandomSpot.x, 0, RandomSpot.y) * LevelScale;
 
-        RandomPositions.RemoveAt(Index);
+        RandomMazePositions.RemoveAt(Index);
+
+        return RealPosition;
+    }
+
+    public Vector3 GetRandomSafePosition()
+    {
+        int Index = Random.Range(0, RandomSafePositions.Count);
+        Vector2Int RandomSpot = RandomSafePositions[Index];
+        Vector3 RealPosition = new Vector3(RandomSpot.x, 0, RandomSpot.y) * LevelScale;
+
+        RandomSafePositions.RemoveAt(Index);
 
         return RealPosition;
     }
@@ -223,8 +238,6 @@ public class StageBuilder : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         transform.localScale = Vector3.one * LevelScale;
-
-        RandomPositions = new(StageBlob);
 
         navMeshSurface.BuildNavMesh();
         OnLevelBuild?.Invoke();

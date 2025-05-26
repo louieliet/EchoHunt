@@ -91,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ResetPlayer()
     {
-        transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
+        transform.position = StageBuilder.instance.GetRandomSafePosition();
     }
 
     void OnMovement(Vector2 input)

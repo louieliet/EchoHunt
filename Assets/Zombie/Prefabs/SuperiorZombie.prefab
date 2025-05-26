@@ -1487,7 +1487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  attackDistance: 1
+  attackDistance: 2
   visionRange: 10
   visionAngle: 90
   EyesReference: {fileID: 389575656556154348}
@@ -1499,7 +1499,7 @@ MonoBehaviour:
       m_Calls: []
   detectionUpdateRate: 0.2
   stunDuration: 2
-  investigationTime: 5
+  investigationTime: 10
   searchTime: 8
   rotationSpeed: 2
   alertDecayTime: 3
@@ -1519,8 +1519,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6bc59f90fd5644c4ba431e47b36df3ce, type: 3}
   maxAudioDistance: 20
   runThresholdDistance: 8
-  walkSpeed: 3.5
-  runSpeed: 7
+  walkSpeed: 5
+  runSpeed: 9
 --- !u!82 &908750565159028662
 AudioSource:
   m_ObjectHideFlags: 0

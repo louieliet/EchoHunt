@@ -8,7 +8,7 @@ public enum ZombieState { Idle, Alert, Investigate, Chase, Searching }
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(AudioSource))]
-public class EnemyBehavior : MonoBehaviour, ICapturable
+public class EnemyBehavior : MonoBehaviour, ICapturable, IEnvironmentListener
 {
     public Transform target;
     public float attackDistance;
@@ -128,7 +128,7 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
     {
         GameManager.CreatedZombie();
 
-        transform.position = StageBuilder.instance.GetRandomPositionAtMaze();
+        transform.position = StageBuilder.instance.GetRandomMazePosition();
         isZombieAwake = true;
         agent.enabled = true;
         currentState = ZombieState.Idle;
@@ -627,5 +627,13 @@ public class EnemyBehavior : MonoBehaviour, ICapturable
         float distance = Vector3.Distance(transform.position, target.position);
         float volume = 1f - Mathf.Clamp01(distance / maxAudioDistance);
         audioSource.volume = volume;
+    }
+
+    public virtual void Hear(Vector3 position)
+    {
+        if (Vector3.Distance(position, transform.position) > hearingRange) return;
+
+        investigationTarget = position;
+        ChangeState(ZombieState.Investigate);
     }
 }
