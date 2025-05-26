@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class RoomGenerator3x3 : RoomGenerator
 {
-    public GameObject wallPrefab;
-    public GameObject doorPrefab;
+    public GameObject[] wallPrefab;
+    public GameObject[] doorPrefab;
 
     public override int Complexity { get; } = 3;
 
@@ -48,7 +48,7 @@ public class RoomGenerator3x3 : RoomGenerator
                 if (Vector2Int.Distance(roomPart, other) != 1) continue;    // If adjacent distance isn't 1, then it's not adjacent to this tile
 
                 Vector2 doorDirection = ((Vector2)(other - roomPart)).normalized;
-                InstantiateDirectionalAsset(doorPrefab, roomPart, doorDirection);
+                InstantiateDirectionalAsset(doorPrefab[Random.Range(0, doorPrefab.Length)], roomPart, doorDirection);
             }
 
             foreach (Vector2Int wall in wallList)
@@ -56,7 +56,7 @@ public class RoomGenerator3x3 : RoomGenerator
                 if (Vector2Int.Distance(roomPart, wall) != 1) continue;    // If adjacent distance isn't 1, then it's not adjacent to this tile
 
                 Vector2 doorDirection = ((Vector2)(wall - roomPart)).normalized;
-                InstantiateDirectionalAsset(wallPrefab, roomPart, doorDirection);
+                InstantiateDirectionalAsset(wallPrefab[Random.Range(0, wallPrefab.Length)], roomPart, doorDirection);
             }
         }
     }
