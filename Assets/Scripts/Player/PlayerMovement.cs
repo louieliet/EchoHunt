@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(0, 100)] private float moveSpeed;
     [SerializeField] private float groundDrag = 10f; // Increased drag for less sliding
     [SerializeField] private float stopForceMultiplier = 7f; // Force multiplier when stopping
+    [SerializeField] private float sprintMultiplier = 1.5f;
+    [SerializeField] private float sprintFootstepMultiplier = 1.5f;
 
     [Header("Ground Check")]
     [SerializeField] private float playerHeight;
@@ -41,6 +43,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Parry Sound")]
     public AudioClip parryClip;
 
+    private bool isSprinting;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -53,6 +57,8 @@ public class PlayerMovement : MonoBehaviour
 
         PlayerController.controller.Player.Move.performed += ctx => OnMovement(ctx.ReadValue<Vector2>());
         PlayerController.controller.Player.Move.canceled += ctx => OnMovement(Vector2.zero);
+        PlayerController.controller.Player.Sprint.performed += ctx => OnSprint(true);
+        PlayerController.controller.Player.Sprint.canceled += ctx => OnSprint(false);
 
         GameManager.player = this.transform;
 
@@ -65,6 +71,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (GameManager.instance == null) return;
         GameManager.instance.OnQTEExit -= SuccesfulQTEDefense;
+        PlayerController.controller.Player.Sprint.performed -= ctx => OnSprint(true);
+        PlayerController.controller.Player.Sprint.canceled -= ctx => OnSprint(false);
     }
 
     void SuccesfulQTEDefense(Transform caller)
@@ -90,6 +98,11 @@ public class PlayerMovement : MonoBehaviour
     {
         movementInput = input;
         IsMakingNoise = input.magnitude > 0.1f; // Actualiza el estado de ruido basado en la entrada
+    }
+
+    void OnSprint(bool sprinting)
+    {
+        isSprinting = sprinting;
     }
 
     void Update()
@@ -136,19 +149,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void CalculateMovement()
     {
-        if (!isGrounded) return; // Don't allow movement if not grounded
+        if (!isGrounded) return;
 
         Vector3 moveDirection = orientation.forward * movementInput.y + orientation.right * movementInput.x;
+        float currentSpeed = moveSpeed * (isSprinting ? sprintMultiplier : 1f);
 
         if (movementInput.magnitude > 0.1f)
         {
             // Apply force only when there's input
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
         }
         else if (rb.linearVelocity.magnitude > 0.1f)
         {
             // Apply counter force when trying to stop
-            Vector3 oppositeForce = -rb.linearVelocity.normalized * moveSpeed * stopForceMultiplier;
+            Vector3 oppositeForce = -rb.linearVelocity.normalized * currentSpeed * stopForceMultiplier;
             rb.AddForce(oppositeForce, ForceMode.Force);
         }
     }
@@ -156,9 +170,11 @@ public class PlayerMovement : MonoBehaviour
     private void SpeedControl()
     {
         Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-        if (flatVel.magnitude > moveSpeed)
+        float currentSpeed = moveSpeed * (isSprinting ? sprintMultiplier : 1f);
+
+        if (flatVel.magnitude > currentSpeed)
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            Vector3 limitedVel = flatVel.normalized * currentSpeed;
             rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
     }
@@ -182,12 +198,13 @@ public class PlayerMovement : MonoBehaviour
     private void PlayFootstepSound()
     {
         footstepCooldown -= Time.deltaTime;
-        // Considera movimiento en XZ (horizontal)
         bool isMoving = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude > 0.1f;
+
         if (isMoving && footstepClip != null && footstepCooldown <= 0f)
         {
             audioSource.PlayOneShot(footstepClip);
-            footstepCooldown = footstepInterval;
+            float currentInterval = footstepInterval / (isSprinting ? sprintFootstepMultiplier : 1f);
+            footstepCooldown = currentInterval;
         }
     }
 }
