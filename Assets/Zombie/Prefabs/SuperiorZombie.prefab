@@ -1487,10 +1487,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  attackDistance: 0
+  attackDistance: 2
   visionRange: 10
   visionAngle: 90
-  EyesReference: {fileID: 0}
+  EyesReference: {fileID: 389575656556154348}
   OnPlayerSpotted:
     m_PersistentCalls:
       m_Calls: []
@@ -1517,6 +1517,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9f4f6c60209d94b9ba2b4882b49f2916, type: 3}
   chaseSounds:
   - {fileID: 8300000, guid: 6bc59f90fd5644c4ba431e47b36df3ce, type: 3}
+  maxAudioDistance: 20
   runThresholdDistance: 8
   walkSpeed: 3.5
   runSpeed: 7

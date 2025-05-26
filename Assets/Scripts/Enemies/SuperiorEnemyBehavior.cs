@@ -85,10 +85,14 @@ public class SuperiorEnemyBehavior : EnemyBehavior
         agent.isStopped = false;
         agent.destination = investigationTarget;
 
-        // Si llegó al punto, vuelve a Idle
-        if (Vector3.Distance(transform.position, investigationTarget) < 2f)
+        float distanceToTarget = Vector3.Distance(transform.position, investigationTarget);
+        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+
+        // Ataca si está cerca del punto de sonido o cerca del jugador
+        if (distanceToTarget < attackDistance || distanceToPlayer < attackDistance)
         {
-            ChangeState(ZombieState.Idle);
+            agent.isStopped = true;
+            RegularZombieQTE.EnterRegularZombieQTE(transform); // Usa el transform del Superior
         }
         else if (stateTimer > investigationTime)
         {

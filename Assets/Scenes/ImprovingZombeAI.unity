@@ -798,6 +798,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
+      propertyPath: StageDimensions.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2061732163802555433, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
+      propertyPath: StageDimensions.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7482631257029719622, guid: 52d38431a4f4f40debd9a3bed7cb3a79, type: 3}
       propertyPath: m_Name
       value: StageBuilder
@@ -912,10 +920,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5747698444817907116, guid: ca97ea1235ed87643896bab1541dbbf5, type: 3}
-      propertyPath: parryClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 69a4932f186d3400eb22a994978d44ed, type: 3}
     - target: {fileID: 7665586992725575443, guid: ca97ea1235ed87643896bab1541dbbf5, type: 3}
       propertyPath: m_Name
       value: QTE Regular Zombie
