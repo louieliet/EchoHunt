@@ -13,6 +13,9 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Ground Check")]
     [SerializeField] private float playerHeight;
+    [SerializeField] private float groundCheckOffset = 0.1f;
+    private bool isGrounded;
+    private Collider playerCollider;
 
     [Header("References")]
     [SerializeField] private Transform orientation;
@@ -46,8 +49,10 @@ public class PlayerMovement : MonoBehaviour
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
 
+        playerCollider = GetComponent<Collider>();
+
         PlayerController.controller.Player.Move.performed += ctx => OnMovement(ctx.ReadValue<Vector2>());
-        PlayerController.controller.Player.Move.canceled += ctx => OnMovement(Vector2.zero); // Reinicia el movimiento cuando no hay entrada
+        PlayerController.controller.Player.Move.canceled += ctx => OnMovement(Vector2.zero);
 
         GameManager.player = this.transform;
 
@@ -89,6 +94,11 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // Ground check
+        RaycastHit hit;
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * groundCheckOffset, Vector3.down, out hit, playerHeight + groundCheckOffset)
+                     && hit.collider != playerCollider;
+
         if (IsMakingNoise)
         {
             // Si estás corriendo, el radio puede ser mayor, por ejemplo
@@ -126,6 +136,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void CalculateMovement()
     {
+        if (!isGrounded) return; // Don't allow movement if not grounded
+
         Vector3 moveDirection = orientation.forward * movementInput.y + orientation.right * movementInput.x;
 
         if (movementInput.magnitude > 0.1f)
@@ -161,6 +173,10 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.color = noiseGizmoColor;
             Gizmos.DrawWireSphere(transform.position, currentNoiseRadius);
         }
+
+        // Draw ground check ray
+        Gizmos.color = isGrounded ? Color.green : Color.red;
+        Gizmos.DrawRay(transform.position + Vector3.up * groundCheckOffset, Vector3.down * (playerHeight + groundCheckOffset));
     }
 
     private void PlayFootstepSound()
